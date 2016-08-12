@@ -189,11 +189,12 @@ ForEach ($computer in $name_list) {
                         'Operating System'      = $OperatingSystem_data
                         'Architecture'          = $os.OSArchitecture
                         'SP Version'            = $os.CSDVersion
+                        'Build Number'          = $os.BuildNumber
                         'Memory'                = (ConvertBytes($compsys.TotalPhysicalMemory))        
                         'Processors'            = $processor.NumberOfLogicalProcessors
                         'Cores'                 = $processor.NumberOfCores
                         'Country Code'          = $os.CountryCode
-                        'Install Date'          = ($os.ConvertToDateTime($os.InstallDate)).ToShortDateString()
+                        'OS Install Date'       = ($os.ConvertToDateTime($os.InstallDate)).ToShortDateString()
                         'Last BootUp'           = (($os.ConvertToDateTime($os.LastBootUpTime)).ToShortDateString() + ' ' + ($os.ConvertToDateTime($os.LastBootUpTime)).ToShortTimeString())
                         'UpTime'                = (Uptime)
                         'Date'                  = $date
@@ -213,7 +214,7 @@ ForEach ($computer in $name_list) {
                         'UUID'                  = $compsysprod.UUID
                     } # New-Object
                 $obj_osinfo.PSObject.TypeNames.Insert(0,"OSInfo")
-                $obj_osinfo_selection = $obj_osinfo | Select-Object 'Computer','Manufacturer','Computer Model','System Type','CPU','Operating System','Architecture','SP Version','Memory','Processors','Cores','Country Code','Install Date','Last BootUp','UpTime','Date','Daylight Bias','Time Offset (Current)','Time Offset (Normal)','Time (Current)','Time (Normal)','Daylight In Effect','Time Zone','OS Version','BIOS Version','Serial Number (BIOS)','Serial Number (OS)','UUID'
+                $obj_osinfo_selection = $obj_osinfo | Select-Object 'Computer','Manufacturer','Computer Model','System Type','CPU','Operating System','Architecture','SP Version','Build Number','Memory','Processors','Cores','Country Code','OS Install Date','Last BootUp','UpTime','Date','Daylight Bias','Time Offset (Current)','Time Offset (Normal)','Time (Current)','Time (Normal)','Daylight In Effect','Time Zone','OS Version','BIOS Version','Serial Number (BIOS)','Serial Number (OS)','UUID'
                 Write-Output $obj_osinfo_selection
                 $empty_line | Out-String
                 $empty_line | Out-String
@@ -267,8 +268,8 @@ ForEach ($computer in $name_list) {
 
 
 # Display the volumes in console
-$volumes_selection = $obj_volumes | Select-Object Computer,Drive,Label,'File System','System Volume','Boot Volume','Indexing Enabled','PageFile Present','Block Size','Compressed','Automount',Used,'Used (%)','Total Size','Free Space','Free (%)'
-$volumes_selection_screen = $obj_volumes | Select-Object Computer,Drive,Label,'File System','System Volume',Used,'Used (%)','Total Size','Free Space','Free (%)'
+$volumes_selection = $obj_volumes | Sort Computer,Drive | Select-Object Computer,Drive,Label,'File System','System Volume','Boot Volume','Indexing Enabled','PageFile Present','Block Size','Compressed','Automount',Used,'Used (%)','Total Size','Free Space','Free (%)'
+$volumes_selection_screen = $obj_volumes | Sort Computer,Drive | Select-Object Computer,Drive,Label,'File System','System Volume',Used,'Used (%)','Total Size','Free Space','Free (%)'
 $volumes_header = 'Volumes'
 Write-Output $volumes_header
 $separator | Out-String
@@ -444,6 +445,10 @@ Add-Content $html_file -Value ('
         <td>' + ($obj_osinfo | Select-Object -ExpandProperty "SP Version") + '</td>
     </tr>
     <tr>
+        <th>Build Number:</th>
+        <td>' + ($obj_osinfo | Select-Object -ExpandProperty "Build Number") + '</td>
+    </tr>
+    <tr>
         <th>Memory:</th>
         <td>' + ($obj_osinfo | Select-Object -ExpandProperty "Memory") + '</td>
     </tr>
@@ -460,8 +465,8 @@ Add-Content $html_file -Value ('
         <td>' + ($obj_osinfo | Select-Object -ExpandProperty "Country Code") + '</td>
     </tr>
     <tr>
-        <th>Install Date:</th>
-        <td>' + ($obj_osinfo | Select-Object -ExpandProperty "Install Date") + '</td>
+        <th>OS Install Date:</th>
+        <td>' + ($obj_osinfo | Select-Object -ExpandProperty "OS Install Date") + '</td>
     </tr>
     <tr>
         <th>Last BootUp:</th>
@@ -672,8 +677,8 @@ ForEach ($computer in $name_list) {
 
                                     } # New-Object
                                 $partition_table.PSObject.TypeNames.Insert(0,"PartitionTable")
-                                $partition_table_selection = $partition_table | Select-Object Computer,Drive,Label,'File System','Boot Partition',Interface,'Media Type','Partition Type',Partition,Used,'Used (%)','Free Space Status','Total Size','Free Space','Free (%)'
-                                $partition_table_selection_screen = $partition_table | Select-Object Computer,Drive,Label,Interface,'Media Type',Partition,'Used (%)','Total Size','Free Space','Free (%)'
+                                $partition_table_selection = $partition_table | Sort Computer,Drive | Select-Object Computer,Drive,Label,'File System','Boot Partition',Interface,'Media Type','Partition Type',Partition,Used,'Used (%)','Free Space Status','Total Size','Free Space','Free (%)'
+                                $partition_table_selection_screen = $partition_table | Sort Computer,Drive | Select-Object Computer,Drive,Label,Interface,'Media Type',Partition,'Used (%)','Total Size','Free Space','Free (%)'
 
 
 
@@ -845,7 +850,10 @@ $env:temp\computer_info.csv            : CSV-file                : computer_info
 .NOTES
 Please note that the two files are created in a directory, which is specified with the 
 $path variable (at line 10). The $env:temp variable points to the current temp folder. 
-The default value of the $env:temp variable is C:\Temp. 
+The default value of the $env:temp variable is C:\Users\<username>\AppData\Local\Temp
+(i.e. each user account has their own separate temp folder at path %USERPROFILE%\AppData\Local\Temp). 
+To change the temp folder for instance to C:\Temp, please, for example, follow the instructions at 
+http://www.eightforums.com/tutorials/23500-temporary-files-folder-change-location-windows.html
 
     Homepage:           https://github.com/auberginehill/get-computer-info
     Version:            1.0
