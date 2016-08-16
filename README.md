@@ -68,7 +68,7 @@
         <th>:arrow_right:</th>
         <td style="padding:6px">
             <ul>
-                <li>Displays general computer information (such as Computer Name, Manufacturer, Computer Model, System Type, CPU, Operating System, Architecture, SP Version, Build Number, Memory, Processors, Cores, Country Code, Install Date, Last BootUp, UpTime, Date, Daylight Bias, Time Offset (Current), Time Offset (Normal), Time (Current), Time (Normal), Daylight In Effect, Time Zone, OS Version, BIOS Version, Serial Number (BIOS), Serial Number (OS), UUID), and a list of volumes in console. In addition to that... </li>
+                <li>Displays general computer information (such as Computer Name, Manufacturer, Computer Model, System Type, CPU, Operating System, Architecture, SP Version, Build Number, Memory, Processors, Cores, Country Code, Install Date, Last BootUp, UpTime, Date, Daylight Bias, Time Offset (Current), Time Offset (Normal), Time (Current), Time (Normal), Daylight In Effect, Time Zone, OS Version, BIOS Version, Serial Number (BIOS), Serial Number (Base Board), Serial Number (OS), UUID), and a list of volumes in console. In addition to that... </li>
             </ul>
         </td>
     </tr>
@@ -143,11 +143,11 @@
                 <p>
                     <li>The <code>$env:temp</code> variable points to the current temp folder. The default value of the <code>$env:temp</code> variable is <code>C:\Users\&lt;username&gt;\AppData\Local\Temp</code> (i.e. each user account has their own separate temp folder at path <code>%USERPROFILE%\AppData\Local\Temp</code>). To change the temp folder for instance to <code>C:\Temp</code>, please, for example, follow the instructions at <a href="http://www.eightforums.com/tutorials/23500-temporary-files-folder-change-location-windows.html">Temporary Files Folder - Change Location in Windows</a>, which in essence are something along the lines:
                         <ol>
-                           <li> Right click on Computer and click on Properties. In the resulting window with the basic information about your computer...
-                           <li> Click on Advanced system settings on the left panel and select Advanced tab on the resulting pop-up window.
-                           <li> Click on the button near the bottom labeled Environment Variables.
-                           <li> In the topmost section labeled User variables you may see both TMP and TEMP listed. Each different login account is assigned its own temporary locations. These values can be changed by double clicking a value or by highlighting a value and selecting Edit. The specified path will be used by Windows and many other programs for temporary files. It's advisable to set the same value (a directory path) for both TMP and TEMP.
-                           <li> You'll need to restart any running programs for the new value to take effect. In fact, you'll probably also need to restart Windows for it to begin using the new value for its own temporary files.
+                           <li>Right click on Computer and click on Properties. In the resulting window with the basic information about your computer...</li>
+                           <li>Click on Advanced system settings on the left panel and select Advanced tab on the resulting pop-up window.</li>
+                           <li>Click on the button near the bottom labeled Environment Variables.</li>
+                           <li>In the topmost section labeled User variables you may see both TMP and TEMP listed. Each different login account is assigned its own temporary locations. These values can be changed by double clicking a value or by highlighting a value and selecting Edit. The specified path will be used by Windows and many other programs for temporary files. It's advisable to set the same value (a directory path) for both TMP and TEMP.</li>
+                           <li>You'll need to restart any running programs for the new value to take effect. In fact, you'll probably also need to restart Windows for it to begin using the new value for its own temporary files.</li>
                         </ol>
                     </li>
                 </p>
@@ -288,7 +288,7 @@
     </tr>
     <tr>
         <th rowspan="5"></th>
-        <td style="padding:6px">Stéphane van Gulick: <a href="https://gallery.technet.microsoft.com/Get-WindowsUpdates-06eb7f43">Get-WindowsUpdates</a></td>
+        <td style="padding:6px"><a href="https://github.com/auberginehill/list-windows-updates">List-WindowsUpdates</a></td>
     </tr>
     <tr>
         <td style="padding:6px"></td>
