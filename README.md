@@ -284,14 +284,14 @@
  <table>
     <tr>
         <th><img class="emoji" title="www" alt="www" height="28" width="28" align="absmiddle" src="https://assets-cdn.github.com/images/icons/emoji/unicode/0023-20e3.png"></th>
-        <td style="padding:6px"><a href="https://github.com/auberginehill/get-unused-drive-letters">Get-UnusedDriveLetters</a></td>
+        <td style="padding:6px"><a href="https://github.com/auberginehill/get-ram-info">Get-RAMInfo</a></td>
     </tr>
     <tr>
         <th rowspan="5"></th>
-        <td style="padding:6px"><a href="https://github.com/auberginehill/list-windows-updates">List-WindowsUpdates</a></td>
+        <td style="padding:6px"><a href="https://github.com/auberginehill/get-unused-drive-letters">Get-UnusedDriveLetters</a></td>
     </tr>
     <tr>
-        <td style="padding:6px"></td>
+        <td style="padding:6px"><a href="https://github.com/auberginehill/list-windows-updates">List-WindowsUpdates</a></td>
     </tr>
     <tr>
         <td style="padding:6px"></td>
