@@ -68,7 +68,7 @@
         <th>:arrow_right:</th>
         <td style="padding:6px">
             <ul>
-                <li>Displays general computer information (such as Computer Name, Manufacturer, Computer Model, System Type, CPU, Operating System, Architecture, SP Version, Build Number, Memory, Processors, Cores, Country Code, Install Date, Last BootUp, UpTime, Date, Daylight Bias, Time Offset (Current), Time Offset (Normal), Time (Current), Time (Normal), Daylight In Effect, Time Zone, OS Version, BIOS Version, Serial Number (BIOS), Serial Number (Base Board), Serial Number (OS), UUID), and a list of volumes in console. In addition to that... </li>
+                <li>Displays general computer information (such as Computer Name, Manufacturer, Computer Model, System Type, Domain Role, Product Type, Chassis, PC Type, weather the machine is a laptop or not (based on the chassis information), CPU, Operating System, Architecture, SP Version, Build Number, Memory, Processors, Cores, Country Code, Install Date, Last BootUp, UpTime, Date, Daylight Bias, Time Offset (Current), Time Offset (Normal), Time (Current), Time (Normal), Daylight In Effect, Time Zone, OS Version, BIOS Version, Serial Number (BIOS), Serial Number (Base Board), Serial Number (OS), UUID), and a list of volumes in console. In addition to that... </li>
             </ul>
         </td>
     </tr>
@@ -141,7 +141,11 @@
         <td style="padding:6px">
             <ul>
                 <p>
-                    <li>The <code>$env:temp</code> variable points to the current temp folder. The default value of the <code>$env:temp</code> variable is <code>C:\Users\&lt;username&gt;\AppData\Local\Temp</code> (i.e. each user account has their own separate temp folder at path <code>%USERPROFILE%\AppData\Local\Temp</code>). To change the temp folder for instance to <code>C:\Temp</code>, please, for example, follow the instructions at <a href="http://www.eightforums.com/tutorials/23500-temporary-files-folder-change-location-windows.html">Temporary Files Folder - Change Location in Windows</a>, which in essence are something along the lines:
+                    <li>The <code>$env:temp</code> variable points to the current temp folder. The default value of the <code>$env:temp</code> variable is <code>C:\Users\&lt;username&gt;\AppData\Local\Temp</code> (i.e. each user account has their own separate temp folder at path <code>%USERPROFILE%\AppData\Local\Temp</code>). To see the current temp path, for instance a command
+                    <br />
+                    <br /><code>[System.IO.Path]::GetTempPath()</code>
+                    <br />
+                    <br />may be used at the PowerShell prompt window <code>[PS>]</code>. To change the temp folder for instance to <code>C:\Temp</code>, please, for example, follow the instructions at <a href="http://www.eightforums.com/tutorials/23500-temporary-files-folder-change-location-windows.html">Temporary Files Folder - Change Location in Windows</a>, which in essence are something along the lines:
                         <ol>
                            <li>Right click on Computer and click on Properties. In the resulting window with the basic information about your computer...</li>
                            <li>Click on Advanced system settings on the left panel and select Advanced tab on the resulting pop-up window.</li>
@@ -272,8 +276,17 @@
         <td style="padding:6px"><a href="https://technet.microsoft.com/en-us/library/ff730960.aspx">Windows PowerShell Tip of the Week: More Fun with Dates (and Times)</a></td>
     </tr>
     <tr>
-        <td style="padding:6px">ASCII Art: <a href="http://www.figlet.org/">http://www.figlet.org/</a> and <a href="http://www.network-science.de/ascii/">ASCII Art Text Generator</a></td>
+        <td style="padding:6px"><a href="https://msdn.microsoft.com/en-us/library/aa394474(v=vs.85).aspx">Win32_SystemEnclosure class</a></td>   
     </tr>
+    <tr>
+        <td style="padding:6px"><a href="https://msdn.microsoft.com/en-us/library/aa394102(v=vs.85).aspx">Win32_ComputerSystem class</a></td>   
+    </tr>
+    <tr>
+        <td style="padding:6px"><a href="https://msdn.microsoft.com/en-us/library/aa394239(v=vs.85).aspx">Win32_OperatingSystem class</a></td>   
+    </tr>  
+    <tr>
+        <td style="padding:6px">ASCII Art: <a href="http://www.figlet.org/">http://www.figlet.org/</a> and <a href="http://www.network-science.de/ascii/">ASCII Art Text Generator</a></td>
+    </tr> 
 </table>
 
 
@@ -284,20 +297,20 @@
  <table>
     <tr>
         <th><img class="emoji" title="www" alt="www" height="28" width="28" align="absmiddle" src="https://assets-cdn.github.com/images/icons/emoji/unicode/0023-20e3.png"></th>
-        <td style="padding:6px"><a href="https://github.com/auberginehill/get-ram-info">Get-RAMInfo</a></td>
+        <td style="padding:6px"><a href="https://github.com/auberginehill/get-battery-info">Get-BatteryInfo</a></td>
     </tr>
     <tr>
         <th rowspan="5"></th>
-        <td style="padding:6px"><a href="https://gist.github.com/auberginehill/eb07d0c781c09ea868123bf519374ee8">Get-TimeDifference</a></td>        
+        <td style="padding:6px"><a href="https://github.com/auberginehill/get-ram-info">Get-RAMInfo</a></td>    
+    </tr>
+    <tr>
+        <td style="padding:6px"><a href="https://gist.github.com/auberginehill/eb07d0c781c09ea868123bf519374ee8">Get-TimeDifference</a></td>  
     </tr>
     <tr>
         <td style="padding:6px"><a href="https://github.com/auberginehill/get-unused-drive-letters">Get-UnusedDriveLetters</a></td>
     </tr>
     <tr>
         <td style="padding:6px"><a href="https://github.com/auberginehill/list-windows-updates">List-WindowsUpdates</a></td>
-    </tr>
-    <tr>
-        <td style="padding:6px"></td>
     </tr>
     <tr>
         <td style="padding:6px"></td>
