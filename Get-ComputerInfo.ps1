@@ -149,6 +149,7 @@ ForEach ($computer in $name_list) {
     $compsys = Get-WmiObject -class Win32_ComputerSystem -ComputerName $computer
     $compsysprod = Get-WMIObject -class Win32_ComputerSystemProduct -ComputerName $computer
     $enclosure = Get-WmiObject -Class Win32_SystemEnclosure -ComputerName $computer
+    $motherboard = Get-WmiObject -class Win32_BaseBoard -ComputerName $computer
     $os = Get-WmiObject -class Win32_OperatingSystem -ComputerName $computer
     $processor = Get-WMIObject -class Win32_Processor -ComputerName $computer
     $timezone = Get-WmiObject -class Win32_TimeZone -ComputerName $computer
@@ -256,47 +257,48 @@ ForEach ($computer in $name_list) {
 
 
                     $obj_osinfo += New-Object -TypeName PSCustomObject -Property @{
-                        'Computer'              = $computer
-                        'Manufacturer'          = $Manufacturer_data
-                        'Computer Model'        = $compsys.Model
-                        'System Type'           = $compsys.SystemType
-                        'Domain Role'           = $domain_role
-                        'Product Type'          = $product_type
-                        'Chassis'               = $chassis
-                        'PC Type'               = $pc_type
-                        'Is a Laptop?'          = $is_a_laptop
-                        'CPU'                   = $CPUArchitecture_data
-                        'Operating System'      = $OperatingSystem_data
-                        'Architecture'          = $os.OSArchitecture
-                        'SP Version'            = $os.CSDVersion
-                        'Build Number'          = $os.BuildNumber
-                        'Memory'                = (ConvertBytes($compsys.TotalPhysicalMemory))
-                        'Processors'            = $processor.NumberOfLogicalProcessors
-                        'Cores'                 = $processor.NumberOfCores
-                        'Country Code'          = $os.CountryCode
-                        'OS Install Date'       = ($os.ConvertToDateTime($os.InstallDate)).ToShortDateString()
-                        'Last BootUp'           = (($os.ConvertToDateTime($os.LastBootUpTime)).ToShortDateString() + ' ' + ($os.ConvertToDateTime($os.LastBootUpTime)).ToShortTimeString())
-                        'UpTime'                = (Uptime)
-                        'Date'                  = $date
-                        'Daylight Bias'         = ((DayLight($timezone.DaylightBias)) + ' (' + $timezone.DaylightName + ')')
-                        'Time Offset (Current)' = (DayLight($timezone.Bias))
-                        'Time Offset (Normal)'  = (DayLight($os.CurrentTimeZone))
-                        'Time (Current)'        = (Get-Date).ToShortTimeString()
-                        'Time (Normal)'         = (((Get-Date).AddMinutes($timezone.DaylightBias)).ToShortTimeString() + ' (' + $timezone.StandardName + ')')
-                        'Daylight In Effect'    = $compsys.DaylightInEffect
-                     #  'Daylight In Effect'    = (Get-Date).IsDaylightSavingTime()
-                        'Time Zone'             = $timezone.Description
-                        'OS Version'            = $os.Version
-                        'BIOS Version'          = $bios.SMBIOSBIOSVersion
-                        'ID'                    = $compsysprod.IdentifyingNumber
-                        'Serial Number (BIOS)'  = $bios.SerialNumber
-                        'Serial Number (OS)'    = $os.SerialNumber
-                        'UUID'                  = $compsysprod.UUID
+                        'Computer'                      = $computer
+                        'Manufacturer'                  = $Manufacturer_data
+                        'Computer Model'                = $compsys.Model
+                        'System Type'                   = $compsys.SystemType
+                        'Domain Role'                   = $domain_role
+                        'Product Type'                  = $product_type
+                        'Chassis'                       = $chassis
+                        'PC Type'                       = $pc_type
+                        'Is a Laptop?'                  = $is_a_laptop
+                        'CPU'                           = $CPUArchitecture_data
+                        'Operating System'              = $OperatingSystem_data
+                        'Architecture'                  = $os.OSArchitecture
+                        'SP Version'                    = $os.CSDVersion
+                        'Build Number'                  = $os.BuildNumber
+                        'Memory'                        = (ConvertBytes($compsys.TotalPhysicalMemory))
+                        'Processors'                    = $processor.NumberOfLogicalProcessors
+                        'Cores'                         = $processor.NumberOfCores
+                        'Country Code'                  = $os.CountryCode
+                        'OS Install Date'               = ($os.ConvertToDateTime($os.InstallDate)).ToShortDateString()
+                        'Last BootUp'                   = (($os.ConvertToDateTime($os.LastBootUpTime)).ToShortDateString() + ' ' + ($os.ConvertToDateTime($os.LastBootUpTime)).ToShortTimeString())
+                        'UpTime'                        = (Uptime)
+                        'Date'                          = $date
+                        'Daylight Bias'                 = ((DayLight($timezone.DaylightBias)) + ' (' + $timezone.DaylightName + ')')
+                        'Time Offset (Current)'         = (DayLight($timezone.Bias))
+                        'Time Offset (Normal)'          = (DayLight($os.CurrentTimeZone))
+                        'Time (Current)'                = (Get-Date).ToShortTimeString()
+                        'Time (Normal)'                 = (((Get-Date).AddMinutes($timezone.DaylightBias)).ToShortTimeString() + ' (' + $timezone.StandardName + ')')
+                        'Daylight In Effect'            = $compsys.DaylightInEffect
+                     #  'Daylight In Effect'            = (Get-Date).IsDaylightSavingTime()
+                        'Time Zone'                     = $timezone.Description
+                        'OS Version'                    = $os.Version
+                        'BIOS Version'                  = $bios.SMBIOSBIOSVersion
+                        'ID'                            = $compsysprod.IdentifyingNumber
+                        'Serial Number (BIOS)'          = $bios.SerialNumber
+                        'Serial Number (Mother Board)'  = $motherboard.SerialNumber
+                        'Serial Number (OS)'            = $os.SerialNumber
+                        'UUID'                          = $compsysprod.UUID
                     } # New-Object
 
 
                 $obj_osinfo.PSObject.TypeNames.Insert(0,"OSInfo")
-                $obj_osinfo_selection = $obj_osinfo | Select-Object 'Computer','Manufacturer','Computer Model','System Type','Domain Role','Product Type','Chassis','PC Type','Is a Laptop?','CPU','Operating System','Architecture','SP Version','Build Number','Memory','Processors','Cores','Country Code','OS Install Date','Last BootUp','UpTime','Date','Daylight Bias','Time Offset (Current)','Time Offset (Normal)','Time (Current)','Time (Normal)','Daylight In Effect','Time Zone','OS Version','BIOS Version','Serial Number (BIOS)','Serial Number (OS)','UUID'
+                $obj_osinfo_selection = $obj_osinfo | Select-Object 'Computer','Manufacturer','Computer Model','System Type','Domain Role','Product Type','Chassis','PC Type','Is a Laptop?','CPU','Operating System','Architecture','SP Version','Build Number','Memory','Processors','Cores','Country Code','OS Install Date','Last BootUp','UpTime','Date','Daylight Bias','Time Offset (Current)','Time Offset (Normal)','Time (Current)','Time (Normal)','Daylight In Effect','Time Zone','OS Version','BIOS Version','Serial Number (BIOS)','Serial Number (Mother Board)','Serial Number (OS)','UUID'
 
 
                 # Display OS Info in console
@@ -624,6 +626,10 @@ Add-Content $html_file -Value ('
     <tr>
         <th>Serial Number (BIOS):</th>
         <td>' + ($obj_osinfo | Select-Object -ExpandProperty "Serial Number (BIOS)") + '</td>
+    </tr>
+    <tr>
+        <th>Serial Number (Mother Board):</th>
+        <td>' + ($obj_osinfo | Select-Object -ExpandProperty "Serial Number (Mother Board)") + '</td>
     </tr>
     <tr>
         <th>Serial Number (OS):</th>
@@ -961,7 +967,7 @@ To see the current temp path, for instance a command
 
     [System.IO.Path]::GetTempPath()
 
-may be used at the PowerShell prompt window [PS>]. To change the temp folder for instance 
+may be used at the PowerShell prompt window [PS>]. To change the temp folder for instance
 to C:\Temp, please, for example, follow the instructions at
 http://www.eightforums.com/tutorials/23500-temporary-files-folder-change-location-windows.html
 
