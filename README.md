@@ -1,4 +1,6 @@
 <!-- Visual Studio Code: For a more comfortable reading experience, use the key combination Ctrl + Shift + V 
+     Visual Studio Code: To crop the tailing end space characters out, please use the key combination Ctrl + Shift + X
+     Visual Studio Code: To improve the formatting of HTML code, press Shift + Alt + F and the selected area will be reformatted in a html file.
 
    _____      _           _____                            _          _____        __      
   / ____|    | |         / ____|                          | |        |_   _|      / _|     
@@ -215,7 +217,7 @@
                                     </table>
                                 </ol>
                         </p>
-                    <p>For more information, type "<code>help Set-ExecutionPolicy -Full</code>" or visit <a href="https://technet.microsoft.com/en-us/library/hh849812.aspx">Set-ExecutionPolicy</a>.</p>
+                    <p>For more information, please type "<code>help Set-ExecutionPolicy -Full</code>" or visit <a href="https://technet.microsoft.com/en-us/library/hh849812.aspx">Set-ExecutionPolicy</a>.</p>
                     </li>
                 </p>
                 <p>
@@ -300,7 +302,13 @@
         <td style="padding:6px"><a href="https://github.com/auberginehill/get-battery-info">Get-BatteryInfo</a></td>
     </tr>
     <tr>
-        <th rowspan="5"></th>
+        <th rowspan="7"></th>
+        <td style="padding:6px"><a href="https://github.com/auberginehill/get-directory-size">Get-DirectorySize</a></td>
+    </tr>
+    <tr>
+        <td style="padding:6px"><a href="https://github.com/auberginehill/get-installed-programs">Get-InstalledPrograms</a></td>
+    </tr>    
+    <tr>
         <td style="padding:6px"><a href="https://github.com/auberginehill/get-installed-windows-updates">Get-InstalledWindowsUpdates</a></td>    
     </tr>
     <tr>
