@@ -77,7 +77,7 @@
         <th>:arrow_right:</th>
         <td style="padding:6px">
             <ul>
-                <li>Displays general computer information (such as Computer Name, Manufacturer, Computer Model, System Type, Domain Role, Product Type, Chassis, PC Type, weather the machine is a laptop or not (based on the chassis information), CPU, Operating System, Architecture, SP Version, Build Number, Memory, Processors, Cores, Country Code, Install Date, Last BootUp, UpTime, Date, Daylight Bias, Time Offset (Current), Time Offset (Normal), Time (Current), Time (Normal), Daylight In Effect, Time Zone, OS Version, BIOS Version, Serial Number (BIOS), Serial Number (Base Board), Serial Number (OS), UUID), and a list of volumes in console. In addition to that... </li>
+                <li>Displays general computer information (such as Computer Name, Manufacturer, Computer Model, System Type, Domain Role, Product Type, Chassis, PC Type, weather the machine is a laptop or not (based on the chassis information), CPU, Operating System, Architecture, SP Version, Build Number, Memory, Processors, Cores, Country Code, Install Date, Last BootUp, UpTime, Date, Daylight Bias, Time Offset (Current), Time Offset (Normal), Time (Current), Time (Normal), Daylight In Effect, Time Zone, OS Version, BIOS Version, Serial Number (BIOS), Serial Number (Base Board), Serial Number (OS), UUID), and a list of volumes in console. Opens a generated HTML-file in the default browser. In addition to that... </li>
             </ul>
         </td>
     </tr>
@@ -86,24 +86,7 @@
         <td style="padding:6px">
             <ul>
                 <p>
-                    <li>One pop-up window (Out-GridView):</li>
-                </p>
-                <ol>
-                    <p>
-                        <table>
-                            <tr>
-                                <td style="padding:6px"><strong>Name</strong></td>
-                                <td style="padding:6px"><strong>Description</strong></td>
-                            </tr>
-                            <tr>
-                                <td style="padding:6px">$path\computer_info.html</a></td>
-                                <td style="padding:6px">Displays the source code of the HTML-file</td>
-                            </tr>
-                        </table>
-                    </p>
-                </ol>
-                <p>
-                    <li>And also one HTML-file and one CSV-file at $path.</li>
+                    <li>The aforementioned HTML-file and one CSV-file at $path</li>
                 </p>
                 <ol>
                     <p>
