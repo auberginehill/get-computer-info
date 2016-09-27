@@ -66,7 +66,7 @@
 ### Screenshot
 
 <ol><ol><ol>
-<img class="screenshot" title="screenshot" alt="screenshot" height="60%" width="60%" src="https://raw.githubusercontent.com/auberginehill/get-computer-info/master/Get-ComputerInfo.png">
+<img class="screenshot" title="screenshot" alt="screenshot" height="90%" width="90%" src="https://raw.githubusercontent.com/auberginehill/get-computer-info/master/Get-ComputerInfo.png">
 </ol></ol></ol>
 
 
