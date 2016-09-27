@@ -38,6 +38,7 @@ $timestamp = Get-Date -UFormat "%Y%m%d"
 $date = Get-Date -Format g
 $time = (Get-Date -UFormat "%d. %m. %Y klo %H.%M")
 $separator = '--------------------'
+$path_text = "Path          : $path\"
 $empty_line = ""
 
 
@@ -390,7 +391,8 @@ $obj_osinfo_selection | Export-Csv $path\computer_info.csv -Delimiter ';' -NoTyp
 $html_file = New-Item -ItemType File -Path "$path\computer_info.html" -Force
 
 
-# Create the HTML-file
+# Display the path and create the HTML-file
+$path_text | Out-String
 $html_file
 
 
