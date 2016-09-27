@@ -65,9 +65,9 @@
 
 ### Screenshot
 
-<ol><ol><ol>
+<ol><ol>
 <img class="screenshot" title="screenshot" alt="screenshot" height="100%" width="100%" src="https://raw.githubusercontent.com/auberginehill/get-computer-info/master/Get-ComputerInfo.png">
-</ol></ol></ol>
+</ol></ol>
 
 
 
