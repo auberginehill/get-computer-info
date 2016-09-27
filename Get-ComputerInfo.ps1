@@ -862,8 +862,9 @@ Add-Content $html_file -Value ('</table>
 
 
 
-# Display the HTML-file in a pop-up window
-Get-Content $path\computer_info.html | Out-GridView
+# Display the HTML-file in the default browser
+# & $Path\time_zones.html
+Start-Process -FilePath "$path\computer_info.html" | Out-Null
 
 
 
@@ -941,22 +942,16 @@ is based on clayman2's PowerShell script "Disk Space"
 (http://powershell.com/cs/media/p/7476.aspx).
 
 .OUTPUTS
-Displays general computer information and a volumes list in console. In addition
+Displays general computer information and a volumes list in console. Opens the 
+generated HTML-file in the default browser. In addition
 to that...
 
 
-One pop-up window "$path\computer_info.html" (Out-GridView):
-
-        Name                                Description
-        ----                                -----------
-        computer_info.html                  Displays the source code of the
-                                            HTML-file
-
-
-And also one HTML-file and one CSV-file at $path
+The aforementioned HTML-file and one CSV-file at $path
 
 $env:temp\computer_info.html           : HTML-file               : computer_info.html
 $env:temp\computer_info.csv            : CSV-file                : computer_info.csv
+
 
 .NOTES
 Please note that the two files are created in a directory, which is specified with the
