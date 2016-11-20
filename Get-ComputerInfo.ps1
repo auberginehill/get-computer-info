@@ -114,12 +114,12 @@ function UpTime {
         $uptime_result = [string]''
     } # else (if)
 
-        If ($uptime_result.Contains("0 h")) {
-            $uptime_result = $uptime_result.Replace("0 h","")
-            } If ($uptime_result.Contains("0 min")) {
-                $uptime_result = $uptime_result.Replace("0 min","")
-                } If ($uptime_result.Contains("0 sec")) {
-                $uptime_result = $uptime_result.Replace("0 sec","")
+        If ($uptime_result.Contains(" 0 h")) {
+            $uptime_result = $uptime_result.Replace(" 0 h"," ")
+            } If ($uptime_result.Contains(" 0 min")) {
+                $uptime_result = $uptime_result.Replace(" 0 min"," ")
+                } If ($uptime_result.Contains(" 0 sec")) {
+                $uptime_result = $uptime_result.Replace(" 0 sec"," ")
         } # if ($uptime_result: first)
 
 $uptime_result
