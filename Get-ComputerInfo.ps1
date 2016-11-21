@@ -969,7 +969,8 @@ to C:\Temp, please, for example, follow the instructions at
 http://www.eightforums.com/tutorials/23500-temporary-files-folder-change-location-windows.html
 
     Homepage:           https://github.com/auberginehill/get-computer-info
-    Version:            1.1
+    Short URL:          http://tinyurl.com/jxvhufb
+    Version:            1.2
 
 .EXAMPLE
 ./Get-ComputerInfo
