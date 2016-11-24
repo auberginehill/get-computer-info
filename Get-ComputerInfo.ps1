@@ -4,8 +4,6 @@
 
 #########################################################################                     # Credit: clayman2: "Disk Space"
 
-# Change the following variables based on your environment
-
 
 $path = $env:temp
 
@@ -25,9 +23,9 @@ $data_alternating_row_color_even = "#FFFFFF"     # hex format will probably give
 
 
 # Colors for free space
-$very_low_space = "#b81321"                      # very low space is less than 1 GB or less than 5 % free
-$low_space = "#ffca00"                           # low space is less than 5 GB or less than 10 % free
-$medium_space = "#137abb"                        # medium space is less than 10 GB or less than 15 % free
+$very_low_space = "#b81321"                      # very low space:  less than 1 GB or less than 5 % free
+$low_space = "#ffca00"                           # low space:       less than 5 GB or less than 10 % free
+$medium_space = "#137abb"                        # medium space:    less than 10 GB or less than 15 % free
 
 
 #########################################################################
@@ -150,12 +148,18 @@ ForEach ($computer in $name_list) {
     $compsys = Get-WmiObject -class Win32_ComputerSystem -ComputerName $computer
     $compsysprod = Get-WMIObject -class Win32_ComputerSystemProduct -ComputerName $computer
     $enclosure = Get-WmiObject -Class Win32_SystemEnclosure -ComputerName $computer
+    $mobilebroadband = Get-WmiObject -Class Win32_POTSModem -ComputerName $computer
     $motherboard = Get-WmiObject -class Win32_BaseBoard -ComputerName $computer
+    $network = Get-WmiObject -Class Win32_NetworkAdapter -ComputerName $computer
     $os = Get-WmiObject -class Win32_OperatingSystem -ComputerName $computer
     $processor = Get-WMIObject -class Win32_Processor -ComputerName $computer
+    $system = Get-WmiObject -Class MS_SystemInformation -Namespace 'root\WMI' -ComputerName $computer
     $timezone = Get-WmiObject -class Win32_TimeZone -ComputerName $computer
+    $video = Get-WmiObject -class Win32_VideoController -ComputerName $computer
+    $ethernet = $network | Where-Object { $_.AdapterTypeId -ne 9 -and $_.MACAddress -ne $null -and $_.ProductName -notlike "*Virtual*" }
 
 
+            # Source: https://msdn.microsoft.com/en-us/library/aa394102(v=vs.85).aspx
             Switch ($compsys.DomainRole) {
                 { $_ -lt 0 } { $domain_role = "" }
                 { $_ -eq 0 } { $domain_role = "Standalone Workstation" }
@@ -168,6 +172,7 @@ ForEach ($computer in $name_list) {
             } # switch domainrole
 
 
+            # Source: https://msdn.microsoft.com/en-us/library/aa394239(v=vs.85).aspx
             Switch ($os.ProductType) {
                 { $_ -lt 1 } { $product_type = "" }
                 { $_ -eq 1 } { $product_type = "Work Station" }
@@ -177,6 +182,7 @@ ForEach ($computer in $name_list) {
             } # switch producttype
 
 
+            # Source: https://msdn.microsoft.com/en-us/library/aa394474(v=vs.85).aspx
             Switch ($enclosure.ChassisTypes) {
                 { $_ -lt 1 } { $chassis = "" }
                 { $_ -eq 1 } { $chassis = "Other" }
@@ -213,6 +219,7 @@ ForEach ($computer in $name_list) {
                     } # if
 
 
+            # Source: https://msdn.microsoft.com/en-us/library/aa394102(v=vs.85).aspx
             Switch ($compsys.PCSystemType) {
                 { $_ -lt 0 } { $pc_type = "" }
                 { $_ -eq 0 } { $pc_type = "Unspecified" }
@@ -228,20 +235,35 @@ ForEach ($computer in $name_list) {
             } # switch pcsystemtype
 
 
+            # Source: https://msdn.microsoft.com/en-us/library/aa394512(v=vs.85).aspx
+            Switch ($video.CurrentScanMode) {
+                { $_ -lt 1 } { $scan_mode = "" }
+                { $_ -eq 1 } { $scan_mode = "Other" }
+                { $_ -eq 2 } { $scan_mode = "Unknown" }
+                { $_ -eq 3 } { $scan_mode = "Interlaced" }
+                { $_ -eq 4 } { $scan_mode = "Noninterlaced" }
+                { $_ -gt 4 } { $scan_mode = "" }
+            } # switch CurrentScanMode
+
+
             # CPU
             $CPUArchitecture_data = $processor.Name
             If ($CPUArchitecture_data.Contains("(TM)")) {
                 $CPUArchitecture_data = $CPUArchitecture_data.Replace("(TM)","")
                 } If ($CPUArchitecture_data.Contains("(R)")) {
                         $CPUArchitecture_data = $CPUArchitecture_data.Replace("(R)","")
-            } # if (CPUArchitecture_data)
+            } Else {
+                $continue = $true
+            } # else (CPUArchitecture_data)
 
 
             # Manufacturer
             $Manufacturer_data = $compsysprod.Vendor
             If ($Manufacturer_data.Contains("HP")) {
                 $Manufacturer_data = $Manufacturer_data.Replace("HP","Hewlett-Packard")
-            } # if
+            } Else {
+                $continue = $true
+            } # else (Manufacturer_data)
 
 
             # Operating System
@@ -250,11 +272,17 @@ ForEach ($computer in $name_list) {
                 $OperatingSystem_data = $OperatingSystem_data.Replace(",","")
                 } If ($OperatingSystem_data.Contains("(R)")) {
                         $OperatingSystem_data = $OperatingSystem_data.Replace("(R)","")
-            } # if (OperatingSystem_data)
+            } Else {
+                $continue = $true
+            } # else (OperatingSystem_data)
 
 
             # $osa = Get-WmiObject win32_operatingsystem | Select @{Name='InstallDate';Expression={$_.ConvertToDateTime($_.InstallDate)}}
             # $InstallDate_Local = $osa.InstallDate
+            # ForEach ($modem in $mobilebroadband) { [string] $modem.AttachedTo + ': ' + $modem.Name }
+            # (@(1,2,3,4) -join ', ')
+            # (@(1,2,3,4) | Out-String).Trim()
+            # (@(ForEach ($modem in $mobilebroadband) { [string] $modem.AttachedTo + ': ' + $modem.Name }) -join ', ')
 
 
                     $obj_osinfo += New-Object -TypeName PSCustomObject -Property @{
@@ -267,15 +295,37 @@ ForEach ($computer in $name_list) {
                         'Chassis'                       = $chassis
                         'PC Type'                       = $pc_type
                         'Is a Laptop?'                  = $is_a_laptop
+                        'Model Version'                 = $system.SystemSKU
                         'CPU'                           = $CPUArchitecture_data
+                        'Video Card'                    = (@(ForEach ($videocard in $video) {
+                                                                    If ($videocard.AdapterDACType -ne $null) {
+                                                                        [string]$videocard.Name.Replace('(R)','') + ' (' + $videocard.AdapterDACType + ')'
+                                                                    } Else {
+                                                                        $videocard.Name.Replace('(R)','')
+                                                                    } # else
+                                                            }) | Out-String).Trim()
+                        'Video Card_br'                 = (@(ForEach ($videocard in $video) {
+                                                                    If ($videocard.AdapterDACType -ne $null) {
+                                                                        [string]$videocard.Name.Replace('(R)','') + ' (' + $videocard.AdapterDACType + ')'
+                                                                    } Else {
+                                                                        $videocard.Name.Replace('(R)','')
+                                                                    } # else
+                                                            }) -join '<br />')
+                        'Resolution'                    = (@(ForEach ($videocard in $video) { [string]$videocard.CurrentHorizontalResolution + ' x ' + $videocard.CurrentVerticalResolution + ' @ ' + $videocard.CurrentRefreshRate + ' MHz' + ' (' + $scan_mode + ')' }) | Out-String).Trim()
+                        'Resolution_br'                 = (@(ForEach ($videocard in $video) { [string]$videocard.CurrentHorizontalResolution + ' x ' + $videocard.CurrentVerticalResolution + ' @ ' + $videocard.CurrentRefreshRate + ' MHz' + ' (' + $scan_mode + ')' }) -join '<br />')
                         'Operating System'              = $OperatingSystem_data
                         'Architecture'                  = $os.OSArchitecture
                         'SP Version'                    = $os.CSDVersion
                         'Build Number'                  = $os.BuildNumber
                         'Memory'                        = (ConvertBytes($compsys.TotalPhysicalMemory))
+                        'Video Memory'                  = (@(ForEach ($videocard in $video) { (ConvertBytes($videocard.AdapterRAM)) }) | Out-String).Trim()
+                        'Video Memory_br'               = (@(ForEach ($videocard in $video) { (ConvertBytes($videocard.AdapterRAM)) }) -join '<br />')
                         'Processors'                    = $processor.NumberOfLogicalProcessors
                         'Cores'                         = $processor.NumberOfCores
                         'Country Code'                  = $os.CountryCode
+                        'Video Driver Date'             = (@(ForEach ($videocard in $video) { ($videocard.ConvertToDateTime($videocard.DriverDate)).ToShortDateString() }) | Out-String).Trim()
+                        'Video Driver Date_br'          = (@(ForEach ($videocard in $video) { ($videocard.ConvertToDateTime($videocard.DriverDate)).ToShortDateString() }) -join '<br />')
+                        'BIOS Release Date'             = (Get-Date -year ($system.BIOSReleaseDate.split("/")[-1]) -month ($system.BIOSReleaseDate.split("/")[0]) -day ($system.BIOSReleaseDate.split("/")[1])).ToShortDateString()
                         'OS Install Date'               = ($os.ConvertToDateTime($os.InstallDate)).ToShortDateString()
                         'Last BootUp'                   = (($os.ConvertToDateTime($os.LastBootUpTime)).ToShortDateString() + ' ' + ($os.ConvertToDateTime($os.LastBootUpTime)).ToShortTimeString())
                         'UpTime'                        = (Uptime)
@@ -284,12 +334,25 @@ ForEach ($computer in $name_list) {
                         'Time Offset (Current)'         = (DayLight($timezone.Bias))
                         'Time Offset (Normal)'          = (DayLight($os.CurrentTimeZone))
                         'Time (Current)'                = (Get-Date).ToShortTimeString()
-                        'Time (Normal)'                 = (((Get-Date).AddMinutes($timezone.DaylightBias)).ToShortTimeString() + ' (' + $timezone.StandardName + ')')
+                        'Time (Normal)'                 = If (((Get-Date).IsDaylightSavingTime()) -eq $true) {
+                                                                (((Get-Date).AddMinutes($timezone.DaylightBias)).ToShortTimeString() + ' (' + $timezone.StandardName + ')')
+                                                            } ElseIf (((Get-Date).IsDaylightSavingTime()) -eq $false) {
+                                                                (Get-Date).ToShortTimeString() + ' (' + $timezone.StandardName + ')'
+                                                            } Else {
+                                                                $continue = $true
+                                                            } # else
                         'Daylight In Effect'            = $compsys.DaylightInEffect
                      #  'Daylight In Effect'            = (Get-Date).IsDaylightSavingTime()
                         'Time Zone'                     = $timezone.Description
+                        'Connectivity'                  = (@(ForEach ($adapter in $ethernet) { [string]$adapter.ProductName.Replace('(R)','') + ' (' + $adapter.NetConnectionID + ')'}) | Out-String).Trim()
+                        'Connectivity_br'               = (@(ForEach ($adapter in $ethernet) { [string]$adapter.ProductName.Replace('(R)','') + ' (' + $adapter.NetConnectionID + ')'}) -join '<br />')
+                        'Mobile Broadband'              = (@(ForEach ($modem in $mobilebroadband) { [string]$modem.Name + ' (' + $modem.AttachedTo + ')'}) | Out-String).Trim()
+                        'Mobile Broadband_br'           = (@(ForEach ($modem in $mobilebroadband) { [string]$modem.Name + ' (' + $modem.AttachedTo + ')'}) -join '<br />')
                         'OS Version'                    = $os.Version
                         'BIOS Version'                  = $bios.SMBIOSBIOSVersion
+                        'Mother Board Version'          = $system.BaseBoardVersion
+                        'Video Card Version'            = (@(ForEach ($videocard in $video) { $videocard.DriverVersion }) | Out-String).Trim()
+                        'Video Card Version_br'         = (@(ForEach ($videocard in $video) { $videocard.DriverVersion }) -join '<br />')
                         'ID'                            = $compsysprod.IdentifyingNumber
                         'Serial Number (BIOS)'          = $bios.SerialNumber
                         'Serial Number (Mother Board)'  = $motherboard.SerialNumber
@@ -299,7 +362,7 @@ ForEach ($computer in $name_list) {
 
 
                 $obj_osinfo.PSObject.TypeNames.Insert(0,"OSInfo")
-                $obj_osinfo_selection = $obj_osinfo | Select-Object 'Computer','Manufacturer','Computer Model','System Type','Domain Role','Product Type','Chassis','PC Type','Is a Laptop?','CPU','Operating System','Architecture','SP Version','Build Number','Memory','Processors','Cores','Country Code','OS Install Date','Last BootUp','UpTime','Date','Daylight Bias','Time Offset (Current)','Time Offset (Normal)','Time (Current)','Time (Normal)','Daylight In Effect','Time Zone','OS Version','BIOS Version','Serial Number (BIOS)','Serial Number (Mother Board)','Serial Number (OS)','UUID'
+                $obj_osinfo_selection = $obj_osinfo | Select-Object 'Computer','Manufacturer','Computer Model','System Type','Domain Role','Product Type','Chassis','PC Type','Is a Laptop?','Model Version','CPU','Video Card','Resolution','Operating System','Architecture','SP Version','Build Number','Memory','Video Memory','Processors','Cores','Country Code','Video Driver Date','BIOS Release Date','OS Install Date','Last BootUp','UpTime','Date','Daylight Bias','Time Offset (Current)','Time Offset (Normal)','Time (Current)','Time (Normal)','Daylight In Effect','Time Zone','Connectivity','Mobile Broadband','OS Version','Video Card Version','BIOS Version','Mother Board Version','Serial Number (BIOS)','Serial Number (Mother Board)','Serial Number (OS)','UUID'
 
 
                 # Display OS Info in console
@@ -311,7 +374,6 @@ ForEach ($computer in $name_list) {
 
 
     # Retrieve additional disk information from volumes (Win32_Volume)
-
     $volumes = Get-WmiObject -class Win32_Volume -ComputerName $computer
 
             ForEach ($volume in $volumes) {
@@ -356,8 +418,8 @@ ForEach ($computer in $name_list) {
 
 
 # Display the volumes in console
-$volumes_selection = $obj_volumes | Sort Computer,Drive | Select-Object Computer,Drive,Label,'File System','System Volume','Boot Volume','Indexing Enabled','PageFile Present','Block Size','Compressed','Automount',Used,'Used (%)','Total Size','Free Space','Free (%)'
-$volumes_selection_screen = $obj_volumes | Sort Computer,Drive | Select-Object Computer,Drive,Label,'File System','System Volume',Used,'Used (%)','Total Size','Free Space','Free (%)'
+$volumes_selection = $obj_volumes | Sort Computer,Drive | Select-Object 'Computer','Drive','Label','File System','System Volume','Boot Volume','Indexing Enabled','PageFile Present','Block Size','Compressed','Automount','Used','Used (%)','Total Size','Free Space','Free (%)'
+$volumes_selection_screen = $obj_volumes | Sort Computer,Drive | Select-Object 'Computer','Drive','Label','File System','System Volume','Used','Used (%)','Total Size','Free Space','Free (%)'
 $volumes_header = 'Volumes'
 Write-Output $volumes_header
 $separator | Out-String
@@ -538,8 +600,20 @@ Add-Content $html_file -Value ('
         <td>' + ($obj_osinfo | Select-Object -ExpandProperty "Is a Laptop?") + '</td>
     </tr>
     <tr>
+        <th>Model Version:</th>
+        <td>' + ($obj_osinfo | Select-Object -ExpandProperty "Model Version") + '</td>
+    </tr>
+    <tr>
         <th>CPU:</th>
         <td>' + ($obj_osinfo | Select-Object -ExpandProperty "CPU") + '</td>
+    </tr>
+    <tr>
+        <th>Video Card:</th>
+        <td>' + ($obj_osinfo | Select-Object -ExpandProperty "Video Card_br") + '</td>
+    </tr>
+    <tr>
+        <th>Resolution:</th>
+        <td>' + ($obj_osinfo | Select-Object -ExpandProperty "Resolution_br") + '</td>
     </tr>
     <tr>
         <th>Operating System:</th>
@@ -562,6 +636,10 @@ Add-Content $html_file -Value ('
         <td>' + ($obj_osinfo | Select-Object -ExpandProperty "Memory") + '</td>
     </tr>
     <tr>
+        <th>Video Memory:</th>
+        <td>' + ($obj_osinfo | Select-Object -ExpandProperty "Video Memory_br") + '</td>
+    </tr>
+    <tr>
         <th>Processors:</th>
         <td>' + ($obj_osinfo | Select-Object -ExpandProperty "Processors") + '</td>
     </tr>
@@ -572,6 +650,14 @@ Add-Content $html_file -Value ('
     <tr>
         <th>Country Code:</th>
         <td>' + ($obj_osinfo | Select-Object -ExpandProperty "Country Code") + '</td>
+    </tr>
+    <tr>
+        <th>Video Driver Date:</th>
+        <td>' + ($obj_osinfo | Select-Object -ExpandProperty "Video Driver Date_br") + '</td>
+    </tr>
+    <tr>
+        <th>BIOS Release Date:</th>
+        <td>' + ($obj_osinfo | Select-Object -ExpandProperty "BIOS Release Date") + '</td>
     </tr>
     <tr>
         <th>OS Install Date:</th>
@@ -618,12 +704,28 @@ Add-Content $html_file -Value ('
         <td>' + ($obj_osinfo | Select-Object -ExpandProperty "Time Zone") + '</td>
     </tr>
     <tr>
+        <th>Connectivity:</th>
+        <td>' + ($obj_osinfo | Select-Object -ExpandProperty "Connectivity_br") + '</td>
+    </tr>
+    <tr>
+        <th>Mobile Broadband:</th>
+        <td>' + ($obj_osinfo | Select-Object -ExpandProperty "Mobile Broadband_br") + '</td>
+    </tr>
+    <tr>
         <th>OS Version:</th>
         <td>' + ($obj_osinfo | Select-Object -ExpandProperty "OS Version") + '</td>
     </tr>
     <tr>
+        <th>Video Card Version:</th>
+        <td>' + ($obj_osinfo | Select-Object -ExpandProperty "Video Card Version_br") + '</td>
+    </tr>
+    <tr>
         <th>BIOS Version:</th>
         <td>' + ($obj_osinfo | Select-Object -ExpandProperty "BIOS Version") + '</td>
+    </tr>
+    <tr>
+        <th>Mother Board Version:</th>
+        <td>' + ($obj_osinfo | Select-Object -ExpandProperty "Mother Board Version") + '</td>
     </tr>
     <tr>
         <th>Serial Number (BIOS):</th>
@@ -944,7 +1046,7 @@ is based on clayman2's PowerShell script "Disk Space"
 (http://powershell.com/cs/media/p/7476.aspx).
 
 .OUTPUTS
-Displays general computer information and a volumes list in console. Opens the 
+Displays general computer information and a volumes list in console. Opens the
 generated HTML-file in the default browser. In addition
 to that...
 
@@ -957,7 +1059,7 @@ $env:temp\computer_info.csv            : CSV-file                : computer_info
 
 .NOTES
 Please note that the two files are created in a directory, which is specified with the
-$path variable (at line 10). The $env:temp variable points to the current temp folder.
+$path variable (at line 8). The $env:temp variable points to the current temp folder.
 The default value of the $env:temp variable is C:\Users\<username>\AppData\Local\Temp
 (i.e. each user account has their own separate temp folder at path %USERPROFILE%\AppData\Local\Temp).
 To see the current temp path, for instance a command
@@ -970,7 +1072,7 @@ http://www.eightforums.com/tutorials/23500-temporary-files-folder-change-locatio
 
     Homepage:           https://github.com/auberginehill/get-computer-info
     Short URL:          http://tinyurl.com/jxvhufb
-    Version:            1.2
+    Version:            1.3
 
 .EXAMPLE
 ./Get-ComputerInfo
@@ -1027,5 +1129,9 @@ https://technet.microsoft.com/en-us/library/ff730960.aspx
 https://msdn.microsoft.com/en-us/library/aa394102(v=vs.85).aspx
 https://msdn.microsoft.com/en-us/library/aa394239(v=vs.85).aspx
 https://msdn.microsoft.com/en-us/library/aa394474(v=vs.85).aspx
+https://msdn.microsoft.com/en-us/library/aa394512(v=vs.85).aspx
+https://msdn.microsoft.com/en-us/library/aa394360(v=vs.85).aspx
+https://msdn.microsoft.com/en-us/library/aa394216(v=vs.85).aspx
+https://msdn.microsoft.com/powershell/reference/5.1/microsoft.powershell.core/Where-Object
 
 #>
