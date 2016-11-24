@@ -323,8 +323,8 @@ ForEach ($computer in $name_list) {
                         'Processors'                    = $processor.NumberOfLogicalProcessors
                         'Cores'                         = $processor.NumberOfCores
                         'Country Code'                  = $os.CountryCode
-                        'Video Driver Date'             = (@(ForEach ($videocard in $video) { ($videocard.ConvertToDateTime($videocard.DriverDate)).ToShortDateString() }) | Out-String).Trim()
-                        'Video Driver Date_br'          = (@(ForEach ($videocard in $video) { ($videocard.ConvertToDateTime($videocard.DriverDate)).ToShortDateString() }) -join '<br />')
+                        'Video Card Driver Date'        = (@(ForEach ($videocard in $video) { ($videocard.ConvertToDateTime($videocard.DriverDate)).ToShortDateString() }) | Out-String).Trim()
+                        'Video Card Driver Date_br'     = (@(ForEach ($videocard in $video) { ($videocard.ConvertToDateTime($videocard.DriverDate)).ToShortDateString() }) -join '<br />')
                         'BIOS Release Date'             = (Get-Date -year ($system.BIOSReleaseDate.split("/")[-1]) -month ($system.BIOSReleaseDate.split("/")[0]) -day ($system.BIOSReleaseDate.split("/")[1])).ToShortDateString()
                         'OS Install Date'               = ($os.ConvertToDateTime($os.InstallDate)).ToShortDateString()
                         'Last BootUp'                   = (($os.ConvertToDateTime($os.LastBootUpTime)).ToShortDateString() + ' ' + ($os.ConvertToDateTime($os.LastBootUpTime)).ToShortTimeString())
@@ -362,7 +362,7 @@ ForEach ($computer in $name_list) {
 
 
                 $obj_osinfo.PSObject.TypeNames.Insert(0,"OSInfo")
-                $obj_osinfo_selection = $obj_osinfo | Select-Object 'Computer','Manufacturer','Computer Model','System Type','Domain Role','Product Type','Chassis','PC Type','Is a Laptop?','Model Version','CPU','Video Card','Resolution','Operating System','Architecture','SP Version','Build Number','Memory','Video Card Memory','Processors','Cores','Country Code','Video Driver Date','BIOS Release Date','OS Install Date','Last BootUp','UpTime','Date','Daylight Bias','Time Offset (Current)','Time Offset (Normal)','Time (Current)','Time (Normal)','Daylight In Effect','Time Zone','Connectivity','Mobile Broadband','OS Version','Video Card Version','BIOS Version','Mother Board Version','Serial Number (BIOS)','Serial Number (Mother Board)','Serial Number (OS)','UUID'
+                $obj_osinfo_selection = $obj_osinfo | Select-Object 'Computer','Manufacturer','Computer Model','System Type','Domain Role','Product Type','Chassis','PC Type','Is a Laptop?','Model Version','CPU','Video Card','Resolution','Operating System','Architecture','SP Version','Build Number','Memory','Video Card Memory','Processors','Cores','Country Code','Video Card Driver Date','BIOS Release Date','OS Install Date','Last BootUp','UpTime','Date','Daylight Bias','Time Offset (Current)','Time Offset (Normal)','Time (Current)','Time (Normal)','Daylight In Effect','Time Zone','Connectivity','Mobile Broadband','OS Version','Video Card Version','BIOS Version','Mother Board Version','Serial Number (BIOS)','Serial Number (Mother Board)','Serial Number (OS)','UUID'
 
 
                 # Display OS Info in console
@@ -652,8 +652,8 @@ Add-Content $html_file -Value ('
         <td>' + ($obj_osinfo | Select-Object -ExpandProperty "Country Code") + '</td>
     </tr>
     <tr>
-        <th>Video Driver Date:</th>
-        <td>' + ($obj_osinfo | Select-Object -ExpandProperty "Video Driver Date_br") + '</td>
+        <th>Video Card Driver Date:</th>
+        <td>' + ($obj_osinfo | Select-Object -ExpandProperty "Video Card Driver Date_br") + '</td>
     </tr>
     <tr>
         <th>BIOS Release Date:</th>
