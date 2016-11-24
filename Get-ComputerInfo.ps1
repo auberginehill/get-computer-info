@@ -344,8 +344,20 @@ ForEach ($computer in $name_list) {
                         'Daylight In Effect'            = $compsys.DaylightInEffect
                      #  'Daylight In Effect'            = (Get-Date).IsDaylightSavingTime()
                         'Time Zone'                     = $timezone.Description
-                        'Connectivity'                  = (@(ForEach ($adapter in $ethernet) { [string]$adapter.ProductName.Replace('(R)','') + ' (' + $adapter.NetConnectionID + ')'}) | Out-String).Trim()
-                        'Connectivity_br'               = (@(ForEach ($adapter in $ethernet) { [string]$adapter.ProductName.Replace('(R)','') + ' (' + $adapter.NetConnectionID + ')'}) -join '<br />')
+                        'Connectivity'                  = (@(ForEach ($adapter in $ethernet) {
+                                                                    If ($adapter.NetConnectionID -ne $null) {
+                                                                        [string]$adapter.ProductName.Replace('(R)','') + ' (' + $adapter.NetConnectionID + ')'
+                                                                    } Else {
+                                                                        [string]$adapter.ProductName.Replace('(R)','')
+                                                                    } # else
+                                                            }) | Out-String).Trim()
+                        'Connectivity_br'               = (@(ForEach ($adapter in $ethernet) {
+                                                                    If ($adapter.NetConnectionID -ne $null) {
+                                                                        [string]$adapter.ProductName.Replace('(R)','') + ' (' + $adapter.NetConnectionID + ')'
+                                                                    } Else {
+                                                                        [string]$adapter.ProductName.Replace('(R)','')
+                                                                    } # else
+                                                            }) -join '<br />')
                         'Mobile Broadband'              = (@(ForEach ($modem in $mobilebroadband) { [string]$modem.Name + ' (' + $modem.AttachedTo + ')'}) | Out-String).Trim()
                         'Mobile Broadband_br'           = (@(ForEach ($modem in $mobilebroadband) { [string]$modem.Name + ' (' + $modem.AttachedTo + ')'}) -join '<br />')
                         'OS Version'                    = $os.Version
