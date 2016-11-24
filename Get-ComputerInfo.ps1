@@ -318,8 +318,8 @@ ForEach ($computer in $name_list) {
                         'SP Version'                    = $os.CSDVersion
                         'Build Number'                  = $os.BuildNumber
                         'Memory'                        = (ConvertBytes($compsys.TotalPhysicalMemory))
-                        'Video Memory'                  = (@(ForEach ($videocard in $video) { (ConvertBytes($videocard.AdapterRAM)) }) | Out-String).Trim()
-                        'Video Memory_br'               = (@(ForEach ($videocard in $video) { (ConvertBytes($videocard.AdapterRAM)) }) -join '<br />')
+                        'Video Card Memory'             = (@(ForEach ($videocard in $video) { (ConvertBytes($videocard.AdapterRAM)) }) | Out-String).Trim()
+                        'Video Card Memory_br'          = (@(ForEach ($videocard in $video) { (ConvertBytes($videocard.AdapterRAM)) }) -join '<br />')
                         'Processors'                    = $processor.NumberOfLogicalProcessors
                         'Cores'                         = $processor.NumberOfCores
                         'Country Code'                  = $os.CountryCode
@@ -362,7 +362,7 @@ ForEach ($computer in $name_list) {
 
 
                 $obj_osinfo.PSObject.TypeNames.Insert(0,"OSInfo")
-                $obj_osinfo_selection = $obj_osinfo | Select-Object 'Computer','Manufacturer','Computer Model','System Type','Domain Role','Product Type','Chassis','PC Type','Is a Laptop?','Model Version','CPU','Video Card','Resolution','Operating System','Architecture','SP Version','Build Number','Memory','Video Memory','Processors','Cores','Country Code','Video Driver Date','BIOS Release Date','OS Install Date','Last BootUp','UpTime','Date','Daylight Bias','Time Offset (Current)','Time Offset (Normal)','Time (Current)','Time (Normal)','Daylight In Effect','Time Zone','Connectivity','Mobile Broadband','OS Version','Video Card Version','BIOS Version','Mother Board Version','Serial Number (BIOS)','Serial Number (Mother Board)','Serial Number (OS)','UUID'
+                $obj_osinfo_selection = $obj_osinfo | Select-Object 'Computer','Manufacturer','Computer Model','System Type','Domain Role','Product Type','Chassis','PC Type','Is a Laptop?','Model Version','CPU','Video Card','Resolution','Operating System','Architecture','SP Version','Build Number','Memory','Video Card Memory','Processors','Cores','Country Code','Video Driver Date','BIOS Release Date','OS Install Date','Last BootUp','UpTime','Date','Daylight Bias','Time Offset (Current)','Time Offset (Normal)','Time (Current)','Time (Normal)','Daylight In Effect','Time Zone','Connectivity','Mobile Broadband','OS Version','Video Card Version','BIOS Version','Mother Board Version','Serial Number (BIOS)','Serial Number (Mother Board)','Serial Number (OS)','UUID'
 
 
                 # Display OS Info in console
@@ -636,8 +636,8 @@ Add-Content $html_file -Value ('
         <td>' + ($obj_osinfo | Select-Object -ExpandProperty "Memory") + '</td>
     </tr>
     <tr>
-        <th>Video Memory:</th>
-        <td>' + ($obj_osinfo | Select-Object -ExpandProperty "Video Memory_br") + '</td>
+        <th>Video Card Memory:</th>
+        <td>' + ($obj_osinfo | Select-Object -ExpandProperty "Video Card Memory_br") + '</td>
     </tr>
     <tr>
         <th>Processors:</th>
