@@ -80,7 +80,7 @@
         <th>:arrow_right:</th>
         <td style="padding:6px">
             <ul>
-                <li>Displays general computer information (such as Computer Name, Manufacturer, Computer Model, System Type, Domain Role, Product Type, Chassis, PC Type, whether the machine is a laptop or not (based on the chassis information), Model Version, CPU, Video Card, Resolution, Operating System, Architecture, SP Version, Build Number, Memory, Video Card Memory, Processors, Cores, Country Code, Video Driver Date, BIOS Release Date, OS Install Date, Last BootUp, UpTime, Date, Daylight Bias, Time Offset (Current), Time Offset (Normal), Time (Current), Time (Normal), Daylight In Effect, Time Zone, Connectivity (network adapters), Mobile Broadband, OS Version, Video Card Version, BIOS Version, Mother Board Version, Serial Number (BIOS), Serial Number (Mother Board), Serial Number (OS), UUID), and a list of volumes in console. Generates a HTML-file and opens the generated HTML-file in the default browser. In addition to that... </li>
+                <li>Displays general computer information (such as Computer Name, Manufacturer, Computer Model, System Type, Domain Role, Product Type, Chassis, PC Type, whether the machine is a laptop or not (based on the chassis information), Model Version, CPU, Video Card, Resolution, Operating System, Architecture, SP Version, Build Number, Memory, Video Card Memory, Processors, Cores, Country Code, Video Card Driver Date, BIOS Release Date, OS Install Date, Last BootUp, UpTime, Date, Daylight Bias, Time Offset (Current), Time Offset (Normal), Time (Current), Time (Normal), Daylight In Effect, Time Zone, Connectivity (network adapters), Mobile Broadband, OS Version, Video Card Version, BIOS Version, Mother Board Version, Serial Number (BIOS), Serial Number (Mother Board), Serial Number (OS), UUID), and a list of volumes in console. Generates a HTML-file and opens the generated HTML-file in the default browser. In addition to that... </li>
             </ul>
         </td>
     </tr>
@@ -127,7 +127,7 @@
         <th>:warning:</th>
         <td style="padding:6px">
             <ul>
-                <li>Please note that the two files are created in a directory, which is specified with the <code>$path</code> variable (at line 10).</li>
+                <li>Please note that the two files are created in a directory, which is specified with the <code>$path</code> variable (at line 8).</li>
             </ul>
         </td>
     </tr>
