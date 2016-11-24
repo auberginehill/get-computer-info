@@ -31,7 +31,7 @@
    </tr>
    <tr>
       <td style="padding:6px"><strong>Description:</strong></td>
-      <td style="padding:6px">Get-ComputerInfo uses Windows Management Instrumentation (WMI) to retrieve basic computer information, a list of volumes and the partition table and displays the results on-screen and writes them to two files. The HTML source code is also displayed in a pop-up window. This script is based on clayman2's PowerShell script "<a href="http://powershell.com/cs/media/p/7476.aspx">Disk Space</a>".</td>
+      <td style="padding:6px">Get-ComputerInfo uses Windows Management Instrumentation (WMI) to retrieve basic computer information, a list of volumes and the partition table and displays the results on-screen and writes them to a HTML- and a CSV-file. The HTML-file is opened in the default browser after being generated. This script is based on clayman2's PowerShell script "<a href="http://powershell.com/cs/media/p/7476.aspx">Disk Space</a>".</td>
    </tr>
    <tr>
       <td style="padding:6px"><strong>Homepage:</strong></td>
@@ -40,7 +40,7 @@
    </tr>
    <tr>
       <td style="padding:6px"><strong>Version:</strong></td>
-      <td style="padding:6px">1.2</td>
+      <td style="padding:6px">1.3</td>
    </tr>
    <tr>
         <td style="padding:6px"><strong>Sources:</strong></td>
@@ -80,7 +80,7 @@
         <th>:arrow_right:</th>
         <td style="padding:6px">
             <ul>
-                <li>Displays general computer information (such as Computer Name, Manufacturer, Computer Model, System Type, Domain Role, Product Type, Chassis, PC Type, whether the machine is a laptop or not (based on the chassis information), CPU, Operating System, Architecture, SP Version, Build Number, Memory, Processors, Cores, Country Code, Install Date, Last BootUp, UpTime, Date, Daylight Bias, Time Offset (Current), Time Offset (Normal), Time (Current), Time (Normal), Daylight In Effect, Time Zone, OS Version, BIOS Version, Serial Number (BIOS), Serial Number (Base Board), Serial Number (OS), UUID), and a list of volumes in console. Opens a generated HTML-file in the default browser. In addition to that... </li>
+                <li>Displays general computer information (such as Computer Name, Manufacturer, Computer Model, System Type, Domain Role, Product Type, Chassis, PC Type, whether the machine is a laptop or not (based on the chassis information), Model Version, CPU, Video Card, Resolution, Operating System, Architecture, SP Version, Build Number, Memory, Video Card Memory, Processors, Cores, Country Code, Video Driver Date, BIOS Release Date, OS Install Date, Last BootUp, UpTime, Date, Daylight Bias, Time Offset (Current), Time Offset (Normal), Time (Current), Time (Normal), Daylight In Effect, Time Zone, Connectivity (network adapters), Mobile Broadband, OS Version, Video Card Version, BIOS Version, Mother Board Version, Serial Number (BIOS), Serial Number (Mother Board), Serial Number (OS), UUID), and a list of volumes in console. Generates a HTML-file and opens the generated HTML-file in the default browser. In addition to that... </li>
             </ul>
         </td>
     </tr>
@@ -258,7 +258,7 @@
         <td style="padding:6px"><a href="https://github.com/auberginehill/get-computer-info">Script Homepage</a></td>
     </tr>
     <tr>
-        <th rowspan="8"></th>
+        <th rowspan="12"></th>
         <td style="padding:6px">clayman2: <a href="http://powershell.com/cs/media/p/7476.aspx">Disk Space</a></td>
     </tr>
     <tr>
@@ -279,6 +279,18 @@
     <tr>
         <td style="padding:6px"><a href="https://msdn.microsoft.com/en-us/library/aa394239(v=vs.85).aspx">Win32_OperatingSystem class</a></td>   
     </tr>  
+    <tr>
+        <td style="padding:6px"><a href="https://msdn.microsoft.com/en-us/library/aa394512(v=vs.85).aspx">Win32_VideoController class</a></td>   
+    </tr> 
+    <tr>
+        <td style="padding:6px"><a href="https://msdn.microsoft.com/en-us/library/aa394360(v=vs.85).aspx">Win32_POTSModem class</a></td>   
+    </tr> 
+    <tr>
+        <td style="padding:6px"><a href="https://msdn.microsoft.com/en-us/library/aa394216(v=vs.85).aspx">Win32_NetworkAdapter class</a></td>   
+    </tr> 
+    <tr>
+        <td style="padding:6px"><a href="https://msdn.microsoft.com/powershell/reference/5.1/microsoft.powershell.core/Where-Object">Where-Object</a></td>   
+    </tr> 
     <tr>
         <td style="padding:6px">ASCII Art: <a href="http://www.figlet.org/">http://www.figlet.org/</a> and <a href="http://www.network-science.de/ascii/">ASCII Art Text Generator</a></td>
     </tr> 
