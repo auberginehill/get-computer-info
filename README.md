@@ -31,9 +31,9 @@
    </tr>
    <tr>
       <td style="padding:6px"><strong>Description:</strong></td>
-      <td style="padding:6px">Get-ComputerInfo uses Windows Management Instrumentation (WMI) and registry queries to retrieve basic computer information, a list of volumes and the partition tables of the computers specified with the <code>-Computer</code> parameter (and/or inputted via a text file with the <code>-File</code> parameter) and displays the results on-screen and writes the results to a CSV- and a HTML-file. The default output destination folder (<code>$env:temp</code>, which points to the current temporary file location and is set in the system) may be changed with the <code>-Output</code> parameter.
+      <td style="padding:6px">Get-ComputerInfo uses Windows Management Instrumentation (WMI) and reads the "<code>HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion</code>" registry key to retrieve basic computer information, a list of volumes and partition tables of the computers specified with the <code>-Computer</code> parameter (and/or inputted via a text file with the <code>-File</code> parameter). The results are displayed on-screen and written to a CSV- and a HTML-file. The default output destination folder is <code>$env:temp</code>, which points to the current temporary file location and is set in the system, may be changed with the <code>-Output</code> parameter.
       <br />
-      <br />With five additional parameters (switches) the amount of gathered data may be enlarged: <code>-SystemInfo</code> parameter will launch the <code>systeminfo.exe /fo CSV</code> Dos command, <code>-MsInfo32</code> parameter opens the System Information (<code>msinfo32</code>) window, <code>-Extract</code> parameter will output the System Information (<code>msinfo32.exe</code>) data to a TXT-, a NFO- and a XML-file, the <code>-GatherNetworkInfo</code> parameter will launch the native <code>GatherNetworkInfo.vbs</code> script (which outputs to <code>$env:temp\Config</code> folder and doesn't follow the <code>-Output</code> parameter) and <code>-Cmdlet</code> parameter will try to launch the native PowerShell <code>Get-ComputerInfo</code> cmdlet and output its data to a text file. This script is based on clayman2's PowerShell script "<a href="http://powershell.com/cs/media/p/7476.aspx">Disk Space</a>".</td>
+      <br />With five additional parameters (switches) the amount of gathered data may be enlarged: <code>-SystemInfo</code> parameter will launch the <code>systeminfo.exe /fo CSV</code> Dos command, <code>-MsInfo32</code> parameter opens the System Information (<code>msinfo32</code>) window, <code>-Extract</code> parameter will output the System Information (<code>msinfo32.exe</code>) data to a TXT-, a NFO- and a XML-file, the <code>-GatherNetworkInfo</code> parameter will launch the native <code>GatherNetworkInfo.vbs</code> script (which outputs to <code>$env:temp\Config</code> folder and doesn't follow the <code>-Output</code> parameter) and <code>-Cmdlet</code> parameter will try to launch the native PowerShell <code>Get-ComputerInfo</code> cmdlet and output its data to a text file. This script is based on clayman2's PowerShell script "<a href="http://powershell.com/cs/media/p/7476.aspx">Disk Space</a>" (or one of the <a href="http://web.archive.org/web/20120304222258/http://powershell.com/cs/media/p/7476.aspx">archive.org versions</a>).</td>
    </tr>
    <tr>
       <td style="padding:6px"><strong>Homepage:</strong></td>
@@ -54,7 +54,7 @@
                 </tr>
                 <tr>
                     <td style="padding:6px">clayman2:</td>
-                    <td style="padding:6px"><a href="http://powershell.com/cs/media/p/7476.aspx">Disk Space</a></td>
+                    <td style="padding:6px"><a href="http://powershell.com/cs/media/p/7476.aspx">Disk Space</a> (or one of the <a href="http://web.archive.org/web/20120304222258/http://powershell.com/cs/media/p/7476.aspx">archive.org versions</a>)</td>
                 </tr>
                 <tr>
                     <td style="padding:6px">Jeff Hicks:</td>
@@ -148,7 +148,7 @@
                 <p>
                     <li>
                         <h5>Parameter <code>-Cmdlet</code></h5>
-                        <p>with aliases <code>-GetComputerInfoCmdlet</code> and <code>-GetComputerInfo</code>. The parameter <code>-Cmdlet</code> will try to launch the native PowerShell <code>Get-ComputerInfo</code> cmdlet and output its data to <code>computer_info.txt</code> and <code>computer_info_original.txt</code> text files.</p>
+                        <p>with aliases <code>-GetComputerInfoCmdlet</code> and <code>-GetComputerInfo</code>. The parameter <code>-Cmdlet</code> will try to launch the native PowerShell <code>Get-ComputerInfo</code> cmdlet and output its data to <code>computer_info.txt</code> and <code>computer_info_original.txt</code> text files. Please note that the inbuilt <code>Get-ComputerInfo</code> cmdlet was first introcuded probably in PowerShell v3.1 or in PowerShell v5.1 at the latest. The <code>Get-Command 'Get-ComputerInfo'</code> command may search for this cmdlet and <code>$PSVersionTable.PSVersion</code> may reveal the PowerShell version.</p>
                     </li>
                 </p>
             </ul>
@@ -208,48 +208,40 @@
                                 <td style="padding:6px"><strong>Path</strong></td>
                                 <td style="padding:6px"><strong>Parameter (switch)</strong></td>
                                 <td style="padding:6px"><strong>Type</strong></td>
-                                <td style="padding:6px"><strong>Name</strong></td>
                             </tr>
                             <tr>
                                 <td style="padding:6px"><code>$env:temp\system_info.txt</code></td>
                                 <td style="padding:6px"><code>-SystemInfo</code></td>
                                 <td style="padding:6px">TXT-file</td>
-                                <td style="padding:6px"><code>system_info.txt</code></td>
                             </tr>
                             <tr>
                                 <td style="padding:6px"><code>$env:temp\ms_info.txt</code></td>
                                 <td style="padding:6px"><code>-Extract</code></td>
                                 <td style="padding:6px">TXT-file</td>
-                                <td style="padding:6px"><code>ms_info.txt</code></td>
                             </tr>
                             <tr>
                                 <td style="padding:6px"><code>$env:temp\ms_info.nfo</code></td>
                                 <td style="padding:6px"><code>-Extract</code></td>
                                 <td style="padding:6px">NFO-file</td>
-                                <td style="padding:6px"><code>ms_info.nfo</code></td>
                             </tr>
                             <tr>
                                 <td style="padding:6px"><code>$env:temp\ms_info.xml</code></td>
                                 <td style="padding:6px"><code>-Extract</code></td>
                                 <td style="padding:6px">XML-file</td>
-                                <td style="padding:6px"><code>ms_info.xml</code></td>
                             </tr>
                             <tr>
                                 <td style="padding:6px"><code>$env:temp\computer_info.txt</code></td>
                                 <td style="padding:6px"><code>-Cmdlet</code></td>
                                 <td style="padding:6px">TXT-file</td>
-                                <td style="padding:6px"><code>computer_info.txt</code></td>
                             </tr>
                             <tr>
                                 <td style="padding:6px"><code>$env:temp\computer_info_original.txt</code></td>
                                 <td style="padding:6px"><code>-Cmdlet</code></td>
                                 <td style="padding:6px">TXT-file</td>
-                                <td style="padding:6px"><code>computer_info_original.txt</code></td>
                             </tr>
                             <tr>
                                 <td style="padding:6px"><code>$env:temp\Config</code></td>
                                 <td style="padding:6px"><code>-GatherNetworkInfo</code></td>
-                                <td style="padding:6px">Folder</td>
                                 <td style="padding:6px">Folder with files and a subfolder</td>
                             </tr>
                         </table>
@@ -409,7 +401,7 @@
     </tr>
     <tr>
         <th rowspan="32"></th>
-        <td style="padding:6px">clayman2: <a href="http://powershell.com/cs/media/p/7476.aspx">Disk Space</a></td>
+        <td style="padding:6px">clayman2: <a href="http://powershell.com/cs/media/p/7476.aspx">Disk Space</a> (or one of the <a href="http://web.archive.org/web/20120304222258/http://powershell.com/cs/media/p/7476.aspx">archive.org versions</a>)</td>
     </tr>
     <tr>
         <td style="padding:6px">Jeff Hicks: <a href="https://www.petri.com/validating-computer-lists-with-powershell">Validating Computer Lists with PowerShell</a></td>
@@ -496,7 +488,7 @@
         <td style="padding:6px"><a href="http://powershellcookbook.com/recipe/qAxK/appendix-b-regular-expression-reference">Appendix B. Regular Expression Reference</a></td>
     </tr>
     <tr>
-        <td style="padding:6px"><a href="http://www.verboon.info/2011/06/the-gathernetworkinfo-vbs-script/">The <code>GatherNetworkInfo.vbs</code> script</a></td>
+        <td style="padding:6px"><a href="http://www.verboon.info/2011/06/the-gathernetworkinfo-vbs-script/">The GatherNetworkInfo.vbs script</a></td>
     </tr>
     <tr>
         <td style="padding:6px"><a href="https://github.com/PowerShell/PowerShell/issues/3080">Get-ComputerInfo returns empty values on Windows 10 for most of the properties</a></td>
