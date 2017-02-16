@@ -1652,12 +1652,13 @@ http://stackoverflow.com/questions/10941756/powershell-show-elapsed-time        
 Retrieves basic computer information from specified computers.
 
 .DESCRIPTION
-Get-ComputerInfo uses Windows Management Instrumentation (WMI) and registry queries
-to retrieve basic computer information, a list of volumes and the partition tables
-of the computers specified with the -Computer parameter (and/or inputted via a text
-file with the -File parameter) and displays the results on-screen and writes the
-results to a CSV- and a HTML-file. The default output destination folder ($env:temp,
-which points to the current temporary file location and is set in the system) may
+Get-ComputerInfo uses Windows Management Instrumentation (WMI) and reads the 
+"HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion" registry key to retrieve 
+basic computer information, a list of volumes and partition tables of the 
+computers specified with the -Computer parameter (and/or inputted via a text
+file with the -File parameter). The results are displayed on-screen and written
+to a CSV- and a HTML-file. The default output destination folder is $env:temp,
+which points to the current temporary file location and is set in the system, may
 be changed with the -Output parameter.
 
 With five additional parameters (switches) the amount of gathered data may be
@@ -1731,7 +1732,12 @@ The GatherNetworkInfo.vbs script will probably run for a few minutes.
 .PARAMETER Cmdlet
 with aliases -GetComputerInfoCmdlet and -GetComputerInfo. The parameter -Cmdlet
 will try to launch the native PowerShell Get-ComputerInfo cmdlet and output its
-data to computer_info.txt and computer_info_original.txt text files.
+data to computer_info.txt and computer_info_original.txt text files. Please note
+that the inbuilt Get-ComputerInfo cmdlet was first introcuded probably in 
+PowerShell v3.1 or in PowerShell v5.1 at the latest. The 
+Get-Command 'Get-ComputerInfo' 
+command may search for this cmdlet and $PSVersionTable.PSVersion may reveal 
+the PowerShell version.
 
 .OUTPUTS
 Displays general computer information and a volumes list in console. Opens the
