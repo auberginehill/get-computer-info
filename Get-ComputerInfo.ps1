@@ -1663,8 +1663,8 @@ be changed with the -Output parameter.
 With five additional parameters (switches) the amount of gathered data may be
 enlarged: -SystemInfo parameter will launch the systeminfo.exe /fo CSV Dos command,
 -MsInfo32 parameter opens the System Information (msinfo32) window, -Extract
-parameter will output the System Information (msinfo32.exe) data to a .txt, .nfo-
-and .xml-files, the -GatherNetworkInfo parameter will launch the native
+parameter will output the System Information (msinfo32.exe) data to a TXT-, a NFO- 
+and a XML-file, the -GatherNetworkInfo parameter will launch the native
 GatherNetworkInfo.vbs script (which outputs to $env:temp\Config folder and doesn't
 follow the -Output parameter) and -Cmdlet parameter will try to launch the native
 PowerShell Get-ComputerInfo cmdlet and output its data to a text file. This script
@@ -1677,7 +1677,7 @@ the computers) for Get-ComputerInfo. To enter multiple computer names, please
 separate each individual computer name with a comma. The -Computer parameter also
 takes an array of strings and objects could be piped to this parameter, too.
 If no value for the -Computer parameter is defined in the command launching
-Get-HashValue, the local machine will be defined as the -Computer parameter value.
+Get-ComputerInfo, the local machine will be defined as the -Computer parameter value.
 
 .PARAMETER Output
 with an alias -ReportPath. Specifies where most of the files are to be saved.
@@ -1686,17 +1686,16 @@ location, which is set in the system. The default -Output save location is defin
 at line 15 with the $Output variable. In case the path name includes space
 characters, please enclose the path name in quotation marks (single or double).
 For usage, please see the Examples below and for more information about $env:temp,
-please see the Notes section below. Please note that the output folder of the
--GatherNetworkInfo is hard coded inside the vbs script and cannot be changed with
-the -Output parameter.
+please see the Notes section below. Please note that the output folder for the 
+-GatherNetworkInfo parameter is hard coded inside the vbs script and cannot be 
+changed with -Output parameter.
 
 .PARAMETER File
 with aliases -ListOfComputersInATxtFile and -List. The -File parameter may be used
 to define the path to a text file, which contains computer names or IP addresses
 (one in each line). If the full filename or the directory name includes space
 characters, please enclose the whole inputted string in quotation marks (single or
-double). If remote computers are specified, Get-ComputerInfo will use Windows
-Management Instrumentation (WMI) over Remote Procedure Calls.
+double).
 
 .PARAMETER SystemInfo
 If the -SystemInfo parameter is added to the command launching Get-ComputerInfo,
@@ -1717,13 +1716,13 @@ to the command launching Get-ComputerInfo, the System Information (msinfo32) win
 may be opened.
 
 .PARAMETER GatherNetworkInfo
-with an alias -Vbs. If the -Extract parameter is added to the command
+with an alias -Vbs. If the -GatherNetworkInfo parameter is added to the command
 launching Get-ComputerInfo, a native GatherNetworkInfo.vbs script (which outputs
 to $env:temp\Config folder and doesn't follow the -Output parameter) is also
-eventually executed when Get-ComputerInfo (this script) is run. The script resides
-in the %windows%\system32 directory and amasses an extensive amount of computer
-related data to the %temp%\Config directory when run. On most Windows machines
-the GatherNetworkInfo.vbs script by default has a passive scheduled task in the
+eventually executed when Get-ComputerInfo (this script) is run. The vbs script 
+resides in the %WINDOWS%\system32 directory and amasses an extensive amount of 
+computer related data to the %TEMP%\Config directory when run. On most Windows machines
+the GatherNetworkInfo.vbs script has by default a passive scheduled task in the
 Task Scheduler (i.e. Control Panel > Administrative Tools > Task Scheduler), which
 for instance can be seen by opening inside the Task Scheduler a
 Task Scheduler Library > Microsoft > Windows > NetTrace > GatherNetworkInfo tab.
@@ -1790,7 +1789,7 @@ http://www.eightforums.com/tutorials/23500-temporary-files-folder-change-locatio
 Run the script. Please notice to insert ./ or .\ before the script name. Gathers
 information about the local machine, displays the data in console, outputs the
 default two files to the default -Output location ($env:temp) and opens the created
-html-file in the default browser.
+HTML-file in the default browser.
 
 .EXAMPLE
 help ./Get-ComputerInfo -Full
@@ -1798,14 +1797,13 @@ Display the help file.
 
 .EXAMPLE
 ./Get-ComputerInfo -Computer dc01, dc02 -Output "E:\chiore" -SystemInfo -Extract -MsInfo32 -Vbs -Cmdlet
-Run the script and get all available computer related information from the computers
+Run the script get all the available computer related information from the computers
 dc01 and dc02. Save most of the results in the "E:\chiore" directory (the results of
 the GatherNetworkInfo.vbs are saved to $env:temp\Config folder). This command will
-work, because -Vbs is an alias of -GatherNetworkInfo. Since the path name doesn't
-contain any space characters, it actually doesn't need to be enveloped with
-quotation marks, and furthermore, the word -Computer may be left out from this
-command, too, because the values dc01 and dc02 are accepted as computer names due to
-their position (first).
+work, because -Vbs is an alias of -GatherNetworkInfo. Since the path name doesn't 
+contain any space characters, it doesn't need to be enveloped with quotation marks, 
+and furthermore, the word -Computer may be left out from this command, too, because 
+the values dc01 and dc02 are accepted as computer names due to their position (first).
 
 .EXAMPLE
 Set-ExecutionPolicy remotesigned
