@@ -1,5 +1,5 @@
 <#
-.\Get-ComputerInfo.ps1
+Get-ComputerInfo.ps1
 #>
 
 
@@ -38,12 +38,11 @@ Begin {
     $time = Get-Date -Format HH.mm
     $empty_line = ""
     $computers = @()
-    $obj_osinfo = @()
-    $obj_volumes = @()
+    $osinfo = @()
+    $volumes = @()
     $partition_table = @()
     $available_computers = @()
     $unavailable_computers = @()
-    $folder = [string]$env:temp + "\Config\"
     $host_name = $env:COMPUTERNAME
     $num_switches = 0
 
@@ -238,7 +237,8 @@ Process {
 
     # Try to process one available instance only once
     # Credit: Jeff Hicks: "Validating Computer Lists with PowerShell" https://www.petri.com/validating-computer-lists-with-powershell
-    $unique_computers = $computers.ToUpper() | select -Unique
+    # $unique_computers = $computers.ToUpper() | select -Unique
+    $unique_computers = $computers | select -Unique
 
         ForEach ($computer_candidate in $unique_computers) {
 
@@ -468,7 +468,7 @@ Process {
                 } # else (OperatingSystem_data)
 
 
-                        $obj_osinfo += New-Object -TypeName PSCustomObject -Property @{
+                        $osinfo += $obj_info = New-Object -TypeName PSCustomObject -Property @{
                             'Computer'                      = $name
                             'Manufacturer'                  = $Manufacturer_data
                             'Computer Model'                = $compsys.Model
@@ -498,17 +498,17 @@ Process {
                             'Resolution_br'                 = (@(ForEach ($videocard in $video) { [string]$videocard.CurrentHorizontalResolution + ' x ' + $videocard.CurrentVerticalResolution + ' @ ' + $videocard.CurrentRefreshRate + ' MHz' + ' (' + $scan_mode + ')' }) -join '<br />')
                             'Operating System'              = $OperatingSystem_data
                             'Architecture'                  = $os.OSArchitecture
-                            'Windows Edition ID'            = $registry.EditionID
-                            'Windows Installation Type'     = $registry.InstallationType
+                            'Windows Edition ID'            = If ($registry.EditionID) {$registry.EditionID} Else {" "}
+                            'Windows Installation Type'     = If ($registry.InstallationType) {$registry.InstallationType} Else {" "}
                             'Windows Platform'              = ([System.Environment]::OSVersion).Platform
-                            'Type'                          = $registry.CurrentType
+                            'Type'                          = If ($registry.CurrentType) {$registry.CurrentType} Else {" "}
                             'SP Version'                    = $os.CSDVersion
-                            'Windows BuildLab Extended'     = $registry.BuildLabEx
-                            'Windows BuildLab'              = $registry.BuildLab
-                            'Windows Build Branch'          = $registry.BuildBranch
+                            'Windows BuildLab Extended'     = If ($registry.BuildLabEx) {$registry.BuildLabEx} Else {" "}
+                            'Windows BuildLab'              = If ($registry.BuildLab) {$registry.BuildLab} Else {" "}
+                            'Windows Build Branch'          = If ($registry.BuildBranch) {$registry.BuildBranch} Else {" "}
                             'Windows Build Number'          = $os.BuildNumber
-                            'Windows Release Id'            = $registry.ReleaseId
-                            'Current Version'               = $registry.CurrentVersion
+                            'Windows Release Id'            = If ($registry.ReleaseId) {$registry.ReleaseId} Else {" "}
+                            'Current Version'               = If ($registry.CurrentVersion) {$registry.CurrentVersion} Else {" "}
                             'Memory'                        = (ConvertBytes($compsys.TotalPhysicalMemory))
                             'Video Card Memory'             = (@(ForEach ($videocard in $video) { (ConvertBytes($videocard.AdapterRAM)) }) | Out-String).Trim()
                             'Video Card Memory_br'          = (@(ForEach ($videocard in $video) { (ConvertBytes($videocard.AdapterRAM)) }) -join '<br />')
@@ -567,11 +567,11 @@ Process {
                         } # New-Object
 
 
-                    $obj_osinfo.PSObject.TypeNames.Insert(0,"OSInfo")
-                    $obj_osinfo_selection = $obj_osinfo | Select-Object 'Computer','Manufacturer','Computer Model','System Type','Domain Role','Product Type','Chassis','PC Type','Is a Laptop?','Model Version','CPU','Video Card','Resolution','Operating System','Architecture','Windows Edition ID','Windows Installation Type','Windows Platform','Type','SP Version','Windows BuildLab Extended','Windows BuildLab','Windows Build Branch','Windows Build Number','Windows Release Id','Current Version','Memory','Video Card Memory','Logical Processors','Cores','Physical Processors','Country Code','Video Card Driver Date','BIOS Release Date','OS Install Date','Last BootUp','UpTime','Date','Daylight Bias','Time Offset (Current)','Time Offset (Normal)','Time (Current)','Time (Normal)','Daylight In Effect','Time Zone','Connectivity','Mobile Broadband','OS Version','PowerShell Version','Video Card Version','BIOS Version','Mother Board Version','Serial Number (BIOS)','Serial Number (Mother Board)','Serial Number (OS)','UUID'
 
 
                     # Display OS Info in console
+                    $obj_osinfo_selection = $osinfo | Select-Object 'Computer','Manufacturer','Computer Model','System Type','Domain Role','Product Type','Chassis','PC Type','Is a Laptop?','Model Version','CPU','Video Card','Resolution','Operating System','Architecture','Windows Edition ID','Windows Installation Type','Windows Platform','Type','SP Version','Windows BuildLab Extended','Windows BuildLab','Windows Build Branch','Windows Build Number','Windows Release Id','Current Version','Memory','Video Card Memory','Logical Processors','Cores','Physical Processors','Country Code','Video Card Driver Date','BIOS Release Date','OS Install Date','Last BootUp','UpTime','Date','Daylight Bias','Time Offset (Current)','Time Offset (Normal)','Time (Current)','Time (Normal)','Daylight In Effect','Time Zone','Connectivity','Mobile Broadband','OS Version','PowerShell Version','Video Card Version','BIOS Version','Mother Board Version','Serial Number (BIOS)','Serial Number (Mother Board)','Serial Number (OS)','UUID'
+                    $obj_osinfo_selection.PSObject.TypeNames.Insert(0,"OSInfo")
                     Write-Output $obj_osinfo_selection
                     $empty_line | Out-String
                     $empty_line | Out-String
@@ -580,10 +580,10 @@ Process {
 
 
         # Retrieve additional disk information from volumes (Win32_Volume)
-        $volumes = Get-WmiObject -class Win32_Volume -ComputerName $name
+        $volumes_query = Get-WmiObject -class Win32_Volume -ComputerName $name
 
-                ForEach ($volume in $volumes) {
-                    $obj_volumes += New-Object -TypeName PSCustomObject -Property @{
+                ForEach ($volume in $volumes_query) {
+                    $volumes += $obj_volumes = New-Object -TypeName PSCustomObject -Property @{
                             'Automount'             = $volume.Automount
                             'Block Size'            = $volume.BlockSize
                             'Boot Volume'           = $volume.BootVolume
@@ -616,7 +616,7 @@ Process {
                                                                 [string]''
                                                         } # else (if)
                         } # New-Object
-                    $obj_volumes.PSObject.TypeNames.Insert(0,"Volume")
+
                 } # ForEach ($volume}
     } # ForEach ($name/first)
 
@@ -735,223 +735,223 @@ Process {
         </tr>
         <tr>
             <th>Manufacturer:</th>
-            <td>" + ($obj_osinfo | Select-Object -ExpandProperty 'Manufacturer') + "</td>
+            <td>" + ($osinfo | Select-Object -ExpandProperty 'Manufacturer') + "</td>
         </tr>
         <tr>
             <th>Computer Model:</th>
-            <td>" + ($obj_osinfo | Select-Object -ExpandProperty 'Computer Model') + "</td>
+            <td>" + ($osinfo | Select-Object -ExpandProperty 'Computer Model') + "</td>
         </tr>
         <tr>
             <th>System Type:</th>
-            <td>" + ($obj_osinfo | Select-Object -ExpandProperty 'System Type') + "</td>
+            <td>" + ($osinfo | Select-Object -ExpandProperty 'System Type') + "</td>
         </tr>
         <tr>
             <th>Domain Role:</th>
-            <td>" + ($obj_osinfo | Select-Object -ExpandProperty 'Domain Role') + "</td>
+            <td>" + ($osinfo | Select-Object -ExpandProperty 'Domain Role') + "</td>
         </tr>
         <tr>
             <th>Product Type:</th>
-            <td>" + ($obj_osinfo | Select-Object -ExpandProperty 'Product Type') + "</td>
+            <td>" + ($osinfo | Select-Object -ExpandProperty 'Product Type') + "</td>
         </tr>
         <tr>
             <th>Chassis:</th>
-            <td>" + ($obj_osinfo | Select-Object -ExpandProperty 'Chassis') + "</td>
+            <td>" + ($osinfo | Select-Object -ExpandProperty 'Chassis') + "</td>
         </tr>
         <tr>
             <th>PC Type:</th>
-            <td>" + ($obj_osinfo | Select-Object -ExpandProperty 'PC Type') + "</td>
+            <td>" + ($osinfo | Select-Object -ExpandProperty 'PC Type') + "</td>
         </tr>
         <tr>
             <th>Is a Laptop?</th>
-            <td>" + ($obj_osinfo | Select-Object -ExpandProperty 'Is a Laptop?') + "</td>
+            <td>" + ($osinfo | Select-Object -ExpandProperty 'Is a Laptop?') + "</td>
         </tr>
         <tr>
             <th>Model Version:</th>
-            <td>" + ($obj_osinfo | Select-Object -ExpandProperty 'Model Version') + "</td>
+            <td>" + ($osinfo | Select-Object -ExpandProperty 'Model Version') + "</td>
         </tr>
         <tr>
             <th>CPU:</th>
-            <td>" + ($obj_osinfo | Select-Object -ExpandProperty 'CPU') + "</td>
+            <td>" + ($osinfo | Select-Object -ExpandProperty 'CPU') + "</td>
         </tr>
         <tr>
             <th>Video Card:</th>
-            <td>" + ($obj_osinfo | Select-Object -ExpandProperty 'Video Card_br') + "</td>
+            <td>" + ($osinfo | Select-Object -ExpandProperty 'Video Card_br') + "</td>
         </tr>
         <tr>
             <th>Resolution:</th>
-            <td>" + ($obj_osinfo | Select-Object -ExpandProperty 'Resolution_br') + "</td>
+            <td>" + ($osinfo | Select-Object -ExpandProperty 'Resolution_br') + "</td>
         </tr>
         <tr>
             <th>Operating System:</th>
-            <td>" + ($obj_osinfo | Select-Object -ExpandProperty 'Operating System') + "</td>
+            <td>" + ($osinfo | Select-Object -ExpandProperty 'Operating System') + "</td>
         </tr>
         <tr>
             <th>Architecture:</th>
-            <td>" + ($obj_osinfo | Select-Object -ExpandProperty 'Architecture') + "</td>
+            <td>" + ($osinfo | Select-Object -ExpandProperty 'Architecture') + "</td>
         </tr>
         <tr>
             <th>Windows Edition ID:</th>
-            <td>" + ($obj_osinfo | Select-Object -ExpandProperty 'Windows Edition ID') + "</td>
+            <td>" + ($osinfo | Select-Object -ExpandProperty 'Windows Edition ID') + "</td>
         </tr>
         <tr>
             <th>Windows Installation Type:</th>
-            <td>" + ($obj_osinfo | Select-Object -ExpandProperty 'Windows Installation Type') + "</td>
+            <td>" + ($osinfo | Select-Object -ExpandProperty 'Windows Installation Type') + "</td>
         </tr>
         <tr>
             <th>Windows Platform:</th>
-            <td>" + ($obj_osinfo | Select-Object -ExpandProperty 'Windows Platform') + "</td>
+            <td>" + ($osinfo | Select-Object -ExpandProperty 'Windows Platform') + "</td>
         </tr>
         <tr>
             <th>Type:</th>
-            <td>" + ($obj_osinfo | Select-Object -ExpandProperty 'Type') + "</td>
+            <td>" + ($osinfo | Select-Object -ExpandProperty 'Type') + "</td>
         </tr>
         <tr>
             <th>SP Version:</th>
-            <td>" + ($obj_osinfo | Select-Object -ExpandProperty 'SP Version') + "</td>
+            <td>" + ($osinfo | Select-Object -ExpandProperty 'SP Version') + "</td>
         </tr>
         <tr>
             <th>Windows BuildLab Extended:</th>
-            <td>" + ($obj_osinfo | Select-Object -ExpandProperty 'Windows BuildLab Extended') + "</td>
+            <td>" + ($osinfo | Select-Object -ExpandProperty 'Windows BuildLab Extended') + "</td>
         </tr>
         <tr>
             <th>Windows BuildLab:</th>
-            <td>" + ($obj_osinfo | Select-Object -ExpandProperty 'Windows BuildLab') + "</td>
+            <td>" + ($osinfo | Select-Object -ExpandProperty 'Windows BuildLab') + "</td>
         </tr>
         <tr>
             <th>Windows Build Branch:</th>
-            <td>" + ($obj_osinfo | Select-Object -ExpandProperty 'Windows Build Branch') + "</td>
+            <td>" + ($osinfo | Select-Object -ExpandProperty 'Windows Build Branch') + "</td>
         </tr>
         <tr>
             <th>Windows Build Number:</th>
-            <td>" + ($obj_osinfo | Select-Object -ExpandProperty 'Windows Build Number') + "</td>
+            <td>" + ($osinfo | Select-Object -ExpandProperty 'Windows Build Number') + "</td>
         </tr>
         <tr>
             <th>Windows Release Id:</th>
-            <td>" + ($obj_osinfo | Select-Object -ExpandProperty 'Windows Release Id') + "</td>
+            <td>" + ($osinfo | Select-Object -ExpandProperty 'Windows Release Id') + "</td>
         </tr>
         <tr>
             <th>Current Version:</th>
-            <td>" + ($obj_osinfo | Select-Object -ExpandProperty 'Current Version') + "</td>
+            <td>" + ($osinfo | Select-Object -ExpandProperty 'Current Version') + "</td>
         </tr>
         <tr>
             <th>Memory:</th>
-            <td>" + ($obj_osinfo | Select-Object -ExpandProperty 'Memory') + "</td>
+            <td>" + ($osinfo | Select-Object -ExpandProperty 'Memory') + "</td>
         </tr>
         <tr>
             <th>Video Card Memory:</th>
-            <td>" + ($obj_osinfo | Select-Object -ExpandProperty 'Video Card Memory_br') + "</td>
+            <td>" + ($osinfo | Select-Object -ExpandProperty 'Video Card Memory_br') + "</td>
         </tr>
         <tr>
             <th>Logical Processors:</th>
-            <td>" + ($obj_osinfo | Select-Object -ExpandProperty 'Logical Processors') + "</td>
+            <td>" + ($osinfo | Select-Object -ExpandProperty 'Logical Processors') + "</td>
         </tr>
         <tr>
             <th>Cores:</th>
-            <td>" + ($obj_osinfo | Select-Object -ExpandProperty 'Cores') + "</td>
+            <td>" + ($osinfo | Select-Object -ExpandProperty 'Cores') + "</td>
         </tr>
         <tr>
             <th>Physical Processors:</th>
-            <td>" + ($obj_osinfo | Select-Object -ExpandProperty 'Physical Processors') + "</td>
+            <td>" + ($osinfo | Select-Object -ExpandProperty 'Physical Processors') + "</td>
         </tr>
         <tr>
             <th>Country Code:</th>
-            <td>" + ($obj_osinfo | Select-Object -ExpandProperty 'Country Code') + "</td>
+            <td>" + ($osinfo | Select-Object -ExpandProperty 'Country Code') + "</td>
         </tr>
         <tr>
             <th>Video Card Driver Date:</th>
-            <td>" + ($obj_osinfo | Select-Object -ExpandProperty 'Video Card Driver Date_br') + "</td>
+            <td>" + ($osinfo | Select-Object -ExpandProperty 'Video Card Driver Date_br') + "</td>
         </tr>
         <tr>
             <th>BIOS Release Date:</th>
-            <td>" + ($obj_osinfo | Select-Object -ExpandProperty 'BIOS Release Date') + "</td>
+            <td>" + ($osinfo | Select-Object -ExpandProperty 'BIOS Release Date') + "</td>
         </tr>
         <tr>
             <th>OS Install Date:</th>
-            <td>" + ($obj_osinfo | Select-Object -ExpandProperty 'OS Install Date') + "</td>
+            <td>" + ($osinfo | Select-Object -ExpandProperty 'OS Install Date') + "</td>
         </tr>
         <tr>
             <th>Last BootUp:</th>
-            <td>" + ($obj_osinfo | Select-Object -ExpandProperty 'Last BootUp') + "</td>
+            <td>" + ($osinfo | Select-Object -ExpandProperty 'Last BootUp') + "</td>
         </tr>
         <tr>
             <th>UpTime:</th>
-            <td>" + ($obj_osinfo | Select-Object -ExpandProperty 'UpTime') + "</td>
+            <td>" + ($osinfo | Select-Object -ExpandProperty 'UpTime') + "</td>
         </tr>
         <tr>
             <th>Date:</th>
-            <td>" + ($obj_osinfo | Select-Object -ExpandProperty 'Date') + "</td>
+            <td>" + ($osinfo | Select-Object -ExpandProperty 'Date') + "</td>
         </tr>
         <tr>
             <th>Daylight Bias:</th>
-            <td>" + ($obj_osinfo | Select-Object -ExpandProperty 'Daylight Bias') + "</td>
+            <td>" + ($osinfo | Select-Object -ExpandProperty 'Daylight Bias') + "</td>
         </tr>
         <tr>
             <th>Time Offset (Current):</th>
-            <td>" + ($obj_osinfo | Select-Object -ExpandProperty 'Time Offset (Current)') + "</td>
+            <td>" + ($osinfo | Select-Object -ExpandProperty 'Time Offset (Current)') + "</td>
         </tr>
         <tr>
             <th>Time Offset (Normal):</th>
-            <td>" + ($obj_osinfo | Select-Object -ExpandProperty 'Time Offset (Normal)') + "</td>
+            <td>" + ($osinfo | Select-Object -ExpandProperty 'Time Offset (Normal)') + "</td>
         </tr>
         <tr>
             <th>Time (Current):</th>
-            <td>" + ($obj_osinfo | Select-Object -ExpandProperty 'Time (Current)') + "</td>
+            <td>" + ($osinfo | Select-Object -ExpandProperty 'Time (Current)') + "</td>
         </tr>
         <tr>
             <th>Time (Normal):</th>
-            <td>" + ($obj_osinfo | Select-Object -ExpandProperty 'Time (Normal)') + "</td>
+            <td>" + ($osinfo | Select-Object -ExpandProperty 'Time (Normal)') + "</td>
         </tr>
         <tr>
             <th>Daylight In Effect:</th>
-            <td>" + ($obj_osinfo | Select-Object -ExpandProperty 'Daylight In Effect') + "</td>
+            <td>" + ($osinfo | Select-Object -ExpandProperty 'Daylight In Effect') + "</td>
         </tr>
         <tr>
             <th>Time Zone:</th>
-            <td>" + ($obj_osinfo | Select-Object -ExpandProperty 'Time Zone') + "</td>
+            <td>" + ($osinfo | Select-Object -ExpandProperty 'Time Zone') + "</td>
         </tr>
         <tr>
             <th>Connectivity:</th>
-            <td>" + ($obj_osinfo | Select-Object -ExpandProperty 'Connectivity_br') + "</td>
+            <td>" + ($osinfo | Select-Object -ExpandProperty 'Connectivity_br') + "</td>
         </tr>
         <tr>
             <th>Mobile Broadband:</th>
-            <td>" + ($obj_osinfo | Select-Object -ExpandProperty 'Mobile Broadband_br') + "</td>
+            <td>" + ($osinfo | Select-Object -ExpandProperty 'Mobile Broadband_br') + "</td>
         </tr>
         <tr>
             <th>OS Version:</th>
-            <td>" + ($obj_osinfo | Select-Object -ExpandProperty 'OS Version') + "</td>
+            <td>" + ($osinfo | Select-Object -ExpandProperty 'OS Version') + "</td>
         </tr>
         <tr>
             <th>PowerShell Version:</th>
-            <td>" + ($obj_osinfo | Select-Object -ExpandProperty 'PowerShell Version') + "</td>
+            <td>" + ($osinfo | Select-Object -ExpandProperty 'PowerShell Version') + "</td>
         </tr>
         <tr>
             <th>Video Card Version:</th>
-            <td>" + ($obj_osinfo | Select-Object -ExpandProperty 'Video Card Version_br') + "</td>
+            <td>" + ($osinfo | Select-Object -ExpandProperty 'Video Card Version_br') + "</td>
         </tr>
         <tr>
             <th>BIOS Version:</th>
-            <td>" + ($obj_osinfo | Select-Object -ExpandProperty 'BIOS Version') + "</td>
+            <td>" + ($osinfo | Select-Object -ExpandProperty 'BIOS Version') + "</td>
         </tr>
         <tr>
             <th>Mother Board Version:</th>
-            <td>" + ($obj_osinfo | Select-Object -ExpandProperty 'Mother Board Version') + "</td>
+            <td>" + ($osinfo | Select-Object -ExpandProperty 'Mother Board Version') + "</td>
         </tr>
         <tr>
             <th>Serial Number (BIOS):</th>
-            <td>" + ($obj_osinfo | Select-Object -ExpandProperty 'Serial Number (BIOS)') + "</td>
+            <td>" + ($osinfo | Select-Object -ExpandProperty 'Serial Number (BIOS)') + "</td>
         </tr>
         <tr>
             <th>Serial Number (Mother Board):</th>
-            <td>" + ($obj_osinfo | Select-Object -ExpandProperty 'Serial Number (Mother Board)') + "</td>
+            <td>" + ($osinfo | Select-Object -ExpandProperty 'Serial Number (Mother Board)') + "</td>
         </tr>
         <tr>
             <th>Serial Number (OS):</th>
-            <td>" + ($obj_osinfo | Select-Object -ExpandProperty 'Serial Number (OS)') + "</td>
+            <td>" + ($osinfo | Select-Object -ExpandProperty 'Serial Number (OS)') + "</td>
         </tr>
         <tr>
             <th>UUID:</th>
-            <td>" + ($obj_osinfo | Select-Object -ExpandProperty 'UUID') + "</td>
+            <td>" + ($osinfo | Select-Object -ExpandProperty 'UUID') + "</td>
         </tr>
     </table>
     <br />
@@ -1073,7 +1073,7 @@ Process {
 
 
 
-                                    $partition_table += New-Object -Type PSCustomObject -Property @{
+                                    $partition_table += $obj_partition = New-Object -Type PSCustomObject -Property @{
 
                                         'Definition'              = $disk.Description
                                         'Disk'                    = $disk.DeviceID
@@ -1108,11 +1108,6 @@ Process {
                                         'Serial Number (Volume)'  = $drive.VolumeSerialNumber
 
                                         } # New-Object
-                                    $partition_table.PSObject.TypeNames.Insert(0,"PartitionTable")
-                                    $partition_table_selection = $partition_table | Sort Computer,Drive | Select-Object Computer,Drive,Label,'File System','Boot Partition',Interface,'Media Type','Partition Type',Partition,Used,'Used (%)','Free Space Status','Total Size','Free Space','Free (%)'
-                                    $partition_table_selection_screen = $partition_table | Sort Computer,Drive | Select-Object Computer,Drive,Label,Interface,'Media Type',Partition,'Used (%)','Total Size','Free Space','Free (%)'
-
-
 
 
                                     # Write the bulk of the main table in the HTML-file
@@ -1139,8 +1134,6 @@ Process {
                 } # ForEach ($partition)
         } # ForEach ($disk)
     } # ForEach ($name/second)
-
-
 
 
     # Write the main table closure and the footer to the HTML-file
@@ -1190,9 +1183,16 @@ Process {
 
 End {
 
+    # Process the partition table
+    $partition_table.PSObject.TypeNames.Insert(0,"PartitionTable")
+    $partition_table_selection = $partition_table | Sort Computer,Drive | Select-Object Computer,Drive,Label,'File System','Boot Partition',Interface,'Media Type','Partition Type',Partition,Used,'Used (%)','Free Space Status','Total Size','Free Space','Free (%)'
+    $partition_table_selection_screen = $partition_table | Sort Computer,Drive | Select-Object Computer,Drive,Label,Interface,'Media Type',Partition,'Used (%)','Total Size','Free Space','Free (%)'
+
+
     # Display the volumes in console
-    $volumes_selection = $obj_volumes | Sort Computer,Drive | Select-Object 'Computer','Drive','Label','File System','System Volume','Boot Volume','Indexing Enabled','PageFile Present','Block Size','Compressed','Automount','Used','Used (%)','Total Size','Free Space','Free (%)'
-    $volumes_selection_screen = $obj_volumes | Sort Computer,Drive | Select-Object 'Computer','Drive','Label','File System','System Volume','Used','Used (%)','Total Size','Free Space','Free (%)'
+    $volumes.PSObject.TypeNames.Insert(0,"Volume")
+    $volumes_selection = $volumes | Sort Computer,Drive | Select-Object 'Computer','Drive','Label','File System','System Volume','Boot Volume','Indexing Enabled','PageFile Present','Block Size','Compressed','Automount','Used','Used (%)','Total Size','Free Space','Free (%)'
+    $volumes_selection_screen = $volumes | Sort Computer,Drive | Select-Object 'Computer','Drive','Label','File System','System Volume','Used','Used (%)','Total Size','Free Space','Free (%)'
     $volumes_header = "Volumes"
     $volumes_coline = "-------"
     Write-Output $volumes_header
@@ -1224,13 +1224,16 @@ End {
  Switches
 
 #>
+# Source: https://technet.microsoft.com/en-us/library/ee692804.aspx
+# Source: http://stackoverflow.com/questions/27175137/powershellv2-remove-last-x-characters-from-a-string#32608908
+If ((($real_output_path.Path).EndsWith("\")) -eq $true) { $real_output_path = $real_output_path -replace ".{1}$"}
+
 
     # (1) SystemInfo.exe
     # Located at %windir%\system32\ directory
     # $system32 = [Environment]::GetFolderPath("System")
     # Source: https://technet.microsoft.com/en-us/library/bb491007.aspx
     # Systeminfo.exe /fo CSV | ConvertFrom-Csv | Export-Csv "system_info.csv" -Delimiter ';' -NoTypeInformation -Encoding UTF8
-
 
         If ($SystemInfo) {
 
@@ -1243,18 +1246,11 @@ End {
                             $activity = "Processing Additional Options $task_number/$activities"
                             $task = "systeminfo.exe /fo CSV | ConvertFrom-Csv | Out-File '$system_info_txt' -Encoding UTF8"
                             Write-Progress -Id $id -Activity $activity -Status $status -CurrentOperation $task -PercentComplete (($task_number / $total_steps) * 100)
-            Try {
-                $system_info = systeminfo.exe /fo CSV | ConvertFrom-Csv
-                $system_info | Out-File "$system_info_txt" -Encoding UTF8
-                $source_alfa = Get-Content $system_info_txt
-                $source_alfa.Replace(",[", "`r`n                            [") | Out-File "$system_info_txt" -Encoding UTF8
-                $source_beta = Get-Content $system_info_txt
-                $source_beta.Replace(":          ", ": ") | Out-File "$system_info_txt" -Encoding UTF8
-                $source_gamma = Get-Content $system_info_txt
-                $source_gamma.Replace(",      ", ", ") | Out-File "$system_info_txt" -Encoding UTF8
-                $source_delta = Get-Content $system_info_txt
-                $source_delta.Replace(":    ", ": ") | Out-File "$system_info_txt" -Encoding UTF8
-            } Catch { Write-Debug $_.Exception }
+
+                Try {
+                    $system_info = systeminfo.exe /fo LIST | Out-File "$system_info_txt" -Encoding UTF8
+                } Catch { Write-Debug $_.Exception }
+              
         } Else {
             $continue = $true
         } # Else
@@ -1301,13 +1297,20 @@ End {
                             $timer = [System.Diagnostics.Stopwatch]::StartNew()
                             $activity = "Processing Additional Options $task_number/$activities"
                             $script = "& msinfo32.exe /categories +systemsummary /report '$ms_info_txt'"
-                            $task = "$script | Time Elapsed: 00:00:00"
-                            Write-Progress -Id $id -Activity $activity -Status $status -CurrentOperation $task -PercentComplete (($task_number / $total_steps) * 100)
+                            Write-Progress -Id $id -Activity $activity -Status $status -CurrentOperation $script -PercentComplete (($task_number / $total_steps) * 100)
+                            $empty_line | Out-String
+                            Write-Verbose "Please hold on, the ms_info.txt file creation probably runs well over a minute..." -verbose
+
+
+
+
             Try {
                 # .txt file
-                $empty_line | Out-String
-                Write-Verbose "Please hold on, the ms_info.txt file creation probably runs well over a minute..." -verbose
-                & msinfo32.exe /categories +systemsummary /report "$ms_info_txt"
+                If ($PSVersionTable.PSVersion -ge 5.1) {
+                    & msinfo32.exe /categories +systemsummary /report "$ms_info_txt"
+                } Else {
+                    & msinfo32.exe /categories +systemsummary /report "$ms_info_txt" | Out-Null
+                } # Else (If $PSVersionTable.PSVersion)                   
             } Catch { Write-Debug $_.Exception }
 
                             do {    $processes = Get-Process
@@ -1348,13 +1351,16 @@ End {
                             $timer.Start()
                             $activity = "Processing Additional Options $task_number/$activities"
                             $script = "& msinfo32.exe /categories +systemsummary /nfo '$ms_info_nfo'"
-                            $task = "$script | Time Elapsed: 00:00:00"
-                            Write-Progress -Id $id -Activity $activity -Status $status -CurrentOperation $task -PercentComplete (($task_number / $total_steps) * 100)
+                            Write-Progress -Id $id -Activity $activity -Status $status -CurrentOperation $script -PercentComplete (($task_number / $total_steps) * 100)
+                            $empty_line | Out-String
+                            Write-Verbose "Please hold on, the ms_info.nfo file creation probably runs for a couple of minutes..." -verbose
             Try {
                 # .nfo file
-                $empty_line | Out-String
-                Write-Verbose "Please hold on, the ms_info.nfo file creation and the .xml conversion probably runs for a couple of minutes..." -verbose
-                & msinfo32.exe /categories +systemsummary /nfo "$ms_info_nfo"
+                If ($PSVersionTable.PSVersion -ge 5.1) {
+                    & msinfo32.exe /categories +systemsummary /nfo "$ms_info_nfo"
+                } Else {
+                    & msinfo32.exe /categories +systemsummary /nfo "$ms_info_nfo" | Out-Null
+                } # Else (If $PSVersionTable.PSVersion)      
             } Catch { Write-Debug $_.Exception }
 
                             do {    $processes = Get-Process
@@ -1366,20 +1372,24 @@ End {
                             }
                             while  ( $processes.Name -contains 'msinfo32' )
 
-            Try {
-                # .nfo to .xml conversion
-                $ms_info_xml = [System.IO.Path]::ChangeExtension($ms_info_nfo,"xml")
-                $source_alfa = Get-Content $ms_info_nfo
-                $source_alfa.Replace("<>", "<type>") | Out-File "$ms_info_nfo" -Encoding UTF8
-                $source_beta = Get-Content $ms_info_nfo
-                $source_beta.Replace("</>", "</type>") | Out-File "$ms_info_nfo" -Encoding UTF8
-                $source_gamma = Get-Content $ms_info_nfo
-                $source_gamma | Out-File "$ms_info_xml" -Encoding UTF8
-                # [xml]$msinfo = Get-Content $ms_info_xml
-                # $msinfo.MsInfo.Category.Category.Category
-            } Catch { Write-Debug $_.Exception }
-                $timer.Stop()
-                $timer.Reset()
+                    # .nfo to .xml conversion
+                    If ($PSVersionTable.PSVersion -ge 5.1) {
+                                    Try {                                        
+                                        $ms_info_xml = [System.IO.Path]::ChangeExtension($ms_info_nfo,"xml")
+                                        $source_alfa = Get-Content $ms_info_nfo
+                                        $source_alfa.Replace("<>", "<type>") | Out-File "$ms_info_nfo" -Encoding UTF8
+                                        $source_beta = Get-Content $ms_info_nfo
+                                        $source_beta.Replace("</>", "</type>") | Out-File "$ms_info_nfo" -Encoding UTF8
+                                        $source_gamma = Get-Content $ms_info_nfo
+                                        $source_gamma | Out-File "$ms_info_xml" -Encoding UTF8
+                                        # [xml]$msinfo = Get-Content $ms_info_xml
+                                        # $msinfo.MsInfo.Category.Category.Category
+                                    } Catch { Write-Debug $_.Exception }
+                    } Else {
+                        $continue = $true
+                    } # Else (If $PSVersionTable.PSVersion)                            
+            $timer.Stop()
+            $timer.Reset()
         } Else {
             $continue = $true
         } # Else (If $Extract)
@@ -1434,6 +1444,7 @@ End {
             # Increment the counters
             $task_number++
             $switch_count++
+            $folder = [string]$env:temp + "\Config\"
             $system32 = [Environment]::GetFolderPath("System")
 
                             # Update the progress bar and start a timer
@@ -1441,12 +1452,46 @@ End {
                             # Source: http://stackoverflow.com/questions/28481811/how-to-correctly-check-if-a-process-is-running-and-stop-it
                             $timer = [System.Diagnostics.Stopwatch]::StartNew()
                             $activity = "Processing Additional Options $task_number/$activities"
-                            $task = "Cscript $system32\gatherNetworkInfo.vbs //Nologo | Time Elapsed: 00:00:00"
+                            $task = "Cscript $system32\gatherNetworkInfo.vbs //Nologo"
                             Write-Progress -Id $id -Activity $activity -Status $status -CurrentOperation $task -PercentComplete (($task_number / $total_steps) * 100)
 
             # Notify the user if the PowerShell session is not elevated (has been run as an administrator)            # Credit: alejandro5042: "How to run exe with/without elevated privileges from PowerShell"
             If (([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]"Administrator") -eq $true) {
-                $continue = $true
+                $empty_line | Out-String
+                Write-Verbose "Please hold on, the GatherNetworkInfo.vbs script probably runs for a few minutes..." -verbose
+                If ($PSVersionTable.PSVersion -ge 5.1) {
+                    Cscript $system32\gatherNetworkInfo.vbs //Nologo
+
+                            <#
+                            # Run the GatherNetworkInfo.vbs script as an background job
+                            # Source: https://msdn.microsoft.com/en-us/powershell/reference/5.1/microsoft.powershell.core/start-job
+                            # Source: https://msdn.microsoft.com/powershell/reference/5.1/Microsoft.PowerShell.Core/about/about_Jobs
+                            Remove-Job -Name VBS -ErrorAction SilentlyContinue
+                            Start-Job -Name VBS -Scriptblock { Invoke-Command -ScriptBlock { $system32 = [Environment]::GetFolderPath("System"); Cscript $system32\gatherNetworkInfo.vbs //Nologo }} | Out-Null
+
+                                        do {    $jobs = Get-Job
+                                                $time_elapsed = $timer.Elapsed
+
+                                                # Update the progress bar                                                         # Credit: Jeff: "Powershell show elapsed time"
+                                                Write-Progress -Id $id -Activity $activity -Status $status -CurrentOperation "$([string]::Format("Cscript $system32\gatherNetworkInfo.vbs //Nologo | Time Elapsed: {0:d2}:{1:d2}:{2:d2}", $time_elapsed.Hours, $time_elapsed.Minutes, $time_elapsed.Seconds))" -PercentComplete (($task_number / $total_steps) * 100)
+                                                Start-Sleep -Seconds 1
+                                        }
+                                        while  ((( $jobs | where { $_.Name -eq 'VBS' }).State) -eq 'Running' )
+
+                            $empty_line | Out-String
+                            Remove-Job -Name VBS -ErrorAction SilentlyContinue
+                            $timer.Stop()
+                            $timer.Reset()
+                            #>
+                } Else {
+                    Cscript $system32\gatherNetworkInfo.vbs //Nologo                                       
+                } # Else
+                            If ((Test-Path $folder) -eq $true){
+                                $empty_line | Out-String 
+                                Write-Verbose "The output of GatherNetworkInfo.vbs script may be found inside the '$folder' directory." -verbose
+                            } Else {
+                                "The content creation failed."
+                            } # Else
             } Else {
                 $empty_line | Out-String
                 Write-Warning "It seems that this script is run in a 'normal' PowerShell window."
@@ -1456,33 +1501,9 @@ End {
                 $admin_text = "For best results the GatherNetworkInfo.vbs script might be required to be run in an elevated window. An elevated PowerShell session can, for example, be initiated by starting PowerShell with the 'run as an administrator' option."
                 Write-Output $admin_text
                 $empty_line | Out-String
-                $exeption_text = "Launching the GatherNetworkInfo.vbs script in a 'normal' PowerShell window..."
+                $exeption_text = "Didn't run the GatherNetworkInfo.vbs script."
                 Write-Output $exeption_text
             } # Else (If Security.Principal)
-
-                # Run the GatherNetworkInfo.vbs script as an background job
-                # Source: https://msdn.microsoft.com/en-us/powershell/reference/5.1/microsoft.powershell.core/start-job
-                # Source: https://msdn.microsoft.com/powershell/reference/5.1/Microsoft.PowerShell.Core/about/about_Jobs
-                $empty_line | Out-String
-                Write-Verbose "Please hold on, the GatherNetworkInfo.vbs script probably runs for a few minutes..." -verbose
-                Remove-Job -Name VBS -ErrorAction SilentlyContinue
-                Start-Job -Name VBS -Scriptblock { Invoke-Command -ScriptBlock { $system32 = [Environment]::GetFolderPath("System"); Cscript $system32\gatherNetworkInfo.vbs //Nologo }} | Out-Null
-
-                            do {    $jobs = Get-Job
-                                    $time_elapsed = $timer.Elapsed
-
-                                    # Update the progress bar                                                         # Credit: Jeff: "Powershell show elapsed time"
-                                    Write-Progress -Id $id -Activity $activity -Status $status -CurrentOperation "$([string]::Format("Cscript $system32\gatherNetworkInfo.vbs //Nologo | Time Elapsed: {0:d2}:{1:d2}:{2:d2}", $time_elapsed.Hours, $time_elapsed.Minutes, $time_elapsed.Seconds))" -PercentComplete (($task_number / $total_steps) * 100)
-                                    Start-Sleep -Seconds 1
-                            }
-                            while  ((( $jobs | where { $_.Name -eq 'VBS' }).State) -eq 'Running' )
-
-                $empty_line | Out-String
-                Write-Verbose "The output of GatherNetworkInfo.vbs script may be found inside the '$folder' directory." -verbose
-                $empty_line | Out-String
-                Remove-Job -Name VBS -ErrorAction SilentlyContinue
-                $timer.Stop()
-                $timer.Reset()
 
         } Else {
             $continue = $true
@@ -1514,7 +1535,7 @@ End {
 
                             # Update the progress bar
                             $activity = "Processing Additional Options $task_number/$activities"
-                            $task = "Get-ComputerInfo | Time Elapsed: 00:00:00"
+                            $task = "Get-ComputerInfo"
                             Write-Progress -Id $id -Activity $activity -Status $status -CurrentOperation $task -PercentComplete (($task_number / $total_steps) * 100)
             Try {
                 # $win_rm = Get-Service "WinRM" -ErrorAction SilentlyContinue
@@ -1530,7 +1551,7 @@ End {
                     $ps_text = "The 'Get-ComputerInfo' inbuilt cmdlet was first introcuded probably in PowerShell v3.1 or in PowerShell v5.1 at the latest. A command Get-Command Get-ComputerInfo might search for the cmdlet and `$PSVersionTable.PSVersion might reveal the PowerShell version."
                     Write-Output $ps_text
                     $empty_line | Out-String
-                    $skip_text = "Didn't run the inbuilt 'Get-ComputerInfo' cmdlet."
+                    $skip_text = "Didn't run the inbuilt 'Get-ComputerInfo' cmdlet. Please disregard any (system generated) suggestions concerning running .\Get-ComputerInfo that might occur below this line and the command prompt."
                     Write-Output $skip_text
 
                 } Else {
@@ -1652,23 +1673,24 @@ http://stackoverflow.com/questions/10941756/powershell-show-elapsed-time        
 Retrieves basic computer information from specified computers.
 
 .DESCRIPTION
-Get-ComputerInfo uses Windows Management Instrumentation (WMI) and reads the 
-"HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion" registry key to retrieve 
-basic computer information, a list of volumes and partition tables of the 
+Get-ComputerInfo uses Windows Management Instrumentation (WMI) and reads the
+"HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion" registry key to retrieve
+basic computer information, a list of volumes and partition tables of the
 computers specified with the -Computer parameter (and/or inputted via a text
 file with the -File parameter). The results are displayed on-screen and written
-to a CSV- and a HTML-file. The default output destination folder is $env:temp,
-which points to the current temporary file location and is set in the system, may
-be changed with the -Output parameter.
+to a CSV- and a HTML-file. The default output destination folder $env:temp,
+which points to the current temporary file location, may be changed with the
+-Output parameter.
 
 With five additional parameters (switches) the amount of gathered data may be
 enlarged: -SystemInfo parameter will launch the systeminfo.exe /fo CSV Dos command,
 -MsInfo32 parameter opens the System Information (msinfo32) window, -Extract
-parameter will output the System Information (msinfo32.exe) data to a TXT-, a NFO- 
-and a XML-file, the -GatherNetworkInfo parameter will launch the native
+parameter will output the System Information (msinfo32.exe) data to a TXT- and
+a NFO-file (and on machines running PowerShell version 5.1 or later convert the 
+data to a XML-file). The -GatherNetworkInfo parameter will launch the native
 GatherNetworkInfo.vbs script (which outputs to $env:temp\Config folder and doesn't
 follow the -Output parameter) and -Cmdlet parameter will try to launch the native
-PowerShell Get-ComputerInfo cmdlet and output its data to a text file. This script
+PowerShell Get-ComputerInfo cmdlet and output its data to text files. This script
 is based on clayman2's PowerShell script "Disk Space"
 (http://powershell.com/cs/media/p/7476.aspx).
 
@@ -1687,8 +1709,8 @@ location, which is set in the system. The default -Output save location is defin
 at line 15 with the $Output variable. In case the path name includes space
 characters, please enclose the path name in quotation marks (single or double).
 For usage, please see the Examples below and for more information about $env:temp,
-please see the Notes section below. Please note that the output folder for the 
--GatherNetworkInfo parameter is hard coded inside the vbs script and cannot be 
+please see the Notes section below. Please note that the output folder for the
+-GatherNetworkInfo parameter is hard coded inside the vbs script and cannot be
 changed with -Output parameter.
 
 .PARAMETER File
@@ -1707,9 +1729,10 @@ system_info.txt text file.
 with aliases -ExtractMsInfo32ToAFile, -ExtractMsInfo32, -MsInfo32ContentsToFile,
 -MsInfo32Report, and -Expand. If the -Extract parameter is added to the command
 launching Get-ComputerInfo, the data contained by the System Information
-(msinfo32.exe) program is exported to ms_info.txt, ms_info.nfo and ms_info.xml
-files. Please note that this step will have a drastical toll on the completion
-time of this script, because each of the three steps may run for minutes.
+(msinfo32.exe) program is exported to ms_info.txt and ms_info.nfo files, and 
+on machines running PowerShell version 5.1 or later the data is also converted 
+to a XML-file. Please note that this step will have a drastical toll on the 
+completion time of this script, because each of the three steps may run for minutes.
 
 .PARAMETER MsInfo32
 with aliases -OpenMsInfo32PopUpWindow and -Window. By adding the -MsInfo32 parameter
@@ -1720,23 +1743,25 @@ may be opened.
 with an alias -Vbs. If the -GatherNetworkInfo parameter is added to the command
 launching Get-ComputerInfo, a native GatherNetworkInfo.vbs script (which outputs
 to $env:temp\Config folder and doesn't follow the -Output parameter) is also
-eventually executed when Get-ComputerInfo (this script) is run. The vbs script 
-resides in the %WINDOWS%\system32 directory and amasses an extensive amount of 
+eventually executed when Get-ComputerInfo (this script) is run. The vbs script
+resides in the %WINDOWS%\system32 directory and amasses an extensive amount of
 computer related data to the %TEMP%\Config directory when run. On most Windows machines
 the GatherNetworkInfo.vbs script has by default a passive scheduled task in the
 Task Scheduler (i.e. Control Panel > Administrative Tools > Task Scheduler), which
 for instance can be seen by opening inside the Task Scheduler a
 Task Scheduler Library > Microsoft > Windows > NetTrace > GatherNetworkInfo tab.
-The GatherNetworkInfo.vbs script will probably run for a few minutes.
+The GatherNetworkInfo.vbs script will probably run for a few minutes. Please note
+that it's mandatory to run the GatherNetworkInfo.vbs in an elevated instance 
+(an elevated cmd-prompt or an elevated PowerShell window) for best results.
 
 .PARAMETER Cmdlet
 with aliases -GetComputerInfoCmdlet and -GetComputerInfo. The parameter -Cmdlet
 will try to launch the native PowerShell Get-ComputerInfo cmdlet and output its
 data to computer_info.txt and computer_info_original.txt text files. Please note
-that the inbuilt Get-ComputerInfo cmdlet was first introcuded probably in 
-PowerShell v3.1 or in PowerShell v5.1 at the latest. The 
-Get-Command 'Get-ComputerInfo' 
-command may search for this cmdlet and $PSVersionTable.PSVersion may reveal 
+that the inbuilt Get-ComputerInfo cmdlet was first introcuded probably in
+PowerShell v3.1 or in PowerShell v5.1 at the latest. The
+Get-Command 'Get-ComputerInfo'
+command may search for this cmdlet and $PSVersionTable.PSVersion may reveal
 the PowerShell version.
 
 .OUTPUTS
@@ -1805,11 +1830,13 @@ Display the help file.
 ./Get-ComputerInfo -Computer dc01, dc02 -Output "E:\chiore" -SystemInfo -Extract -MsInfo32 -Vbs -Cmdlet
 Run the script get all the available computer related information from the computers
 dc01 and dc02. Save most of the results in the "E:\chiore" directory (the results of
-the GatherNetworkInfo.vbs are saved to $env:temp\Config folder). This command will
-work, because -Vbs is an alias of -GatherNetworkInfo. Since the path name doesn't 
-contain any space characters, it doesn't need to be enveloped with quotation marks, 
-and furthermore, the word -Computer may be left out from this command, too, because 
-the values dc01 and dc02 are accepted as computer names due to their position (first).
+the GatherNetworkInfo.vbs are saved to $env:temp\Config folder, if the command 
+launching Get-ComputerInfo was run in an elevated PowerShell window). This command 
+will work, because -Vbs is an alias of -GatherNetworkInfo. Since the path name 
+doesn't contain any space characters, it doesn't need to be enveloped with quotation
+marks, and furthermore, the word -Computer may be left out from this command, too, 
+because the values dc01 and dc02 are accepted as computer names due to their position
+(first).
 
 .EXAMPLE
 Set-ExecutionPolicy remotesigned
@@ -1888,5 +1915,7 @@ http://stackoverflow.com/questions/28481811/how-to-correctly-check-if-a-process-
 http://powershellcookbook.com/recipe/qAxK/appendix-b-regular-expression-reference
 http://www.verboon.info/2011/06/the-gathernetworkinfo-vbs-script/
 https://github.com/PowerShell/PowerShell/issues/3080
+https://technet.microsoft.com/en-us/library/ee692804.aspx
+http://stackoverflow.com/questions/27175137/powershellv2-remove-last-x-characters-from-a-string#32608908
 
 #>
