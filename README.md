@@ -33,7 +33,7 @@
       <td style="padding:6px"><strong>Description:</strong></td>
       <td style="padding:6px">Get-ComputerInfo uses Windows Management Instrumentation (WMI) and reads the "<code>HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion</code>" registry key to retrieve basic computer information, a list of volumes and partition tables of the computers specified with the <code>-Computer</code> parameter (and/or inputted via a text file with the <code>-File</code> parameter). The results are displayed on-screen and written to a CSV- and a HTML-file. The default output destination folder <code>$env:temp</code>, which points to the current temporary file location, may be changed with the <code>-Output</code> parameter.
       <br />
-      <br />With five additional parameters (switches) the amount of gathered data may be enlarged: <code>-SystemInfo</code> parameter will launch the <code>systeminfo.exe /fo CSV</code> Dos command, <code>-MsInfo32</code> parameter opens the System Information (<code>msinfo32</code>) window, <code>-Extract</code> parameter will output the System Information (<code>msinfo32.exe</code>) data to a TXT- and a NFO-file (and on machines running PowerShell version 5.1 or later convert the data to a XML-file). The <code>-GatherNetworkInfo</code> parameter will launch the native <code>GatherNetworkInfo.vbs</code> script (which outputs to <code>$env:temp\Config</code> folder and doesn't follow the <code>-Output</code> parameter) and <code>-Cmdlet</code> parameter will try to launch the native PowerShell <code>Get-ComputerInfo</code> cmdlet and output its data to text files. This script is based on clayman2's PowerShell script "<a href="http://powershell.com/cs/media/p/7476.aspx">Disk Space</a>" (or one of the <a href="http://web.archive.org/web/20120304222258/http://powershell.com/cs/media/p/7476.aspx">archive.org versions</a>).</td>
+      <br />With five additional parameters (switches) the amount of gathered data may be enlarged: <code>-SystemInfo</code> parameter will launch the <code>systeminfo.exe /fo LIST</code> Dos command, <code>-MsInfo32</code> parameter opens the System Information (<code>msinfo32</code>) window, <code>-Extract</code> parameter will export the System Information (<code>msinfo32.exe</code>) data to a TXT- and a NFO-file (and on machines running PowerShell version 5.1 or later convert the data to a XML-file). The <code>-GatherNetworkInfo</code> parameter will launch the native <code>GatherNetworkInfo.vbs</code> script (which outputs to <code>$env:temp\Config</code> folder and doesn't follow the <code>-Output</code> parameter) and <code>-Cmdlet</code> parameter will try to launch the native PowerShell <code>Get-ComputerInfo</code> cmdlet and output its data to text files. This script is based on clayman2's PowerShell script "<a href="http://powershell.com/cs/media/p/7476.aspx">Disk Space</a>" (or one of the <a href="http://web.archive.org/web/20120304222258/http://powershell.com/cs/media/p/7476.aspx">archive.org versions</a>).</td>
    </tr>
    <tr>
       <td style="padding:6px"><strong>Homepage:</strong></td>
@@ -124,13 +124,13 @@
                 <p>
                     <li>
                         <h5>Parameter <code>-SystemInfo</code></h5>
-                        <p>If the <code>-SystemInfo</code> parameter is added to the command launching Get-ComputerInfo, a <code>systeminfo.exe /fo CSV</code> Dos command is eventually launched, which outputs a <code>system_info.txt</code> text file.</p>
+                        <p>If the <code>-SystemInfo</code> parameter is added to the command launching Get-ComputerInfo, a <code>systeminfo.exe /fo LIST</code> Dos command is eventually launched, which outputs a <code>system_info.txt</code> text file.</p>
                     </li>
                 </p>
                 <p>
                     <li>
                         <h5>Parameter <code>-Extract</code></h5>
-                        <p>with aliases <code>-ExtractMsInfo32ToAFile</code>, <code>-ExtractMsInfo32</code>, <code>-MsInfo32ContentsToFile</code>, <code>-MsInfo32Report</code> and <code>-Expand</code>. If the <code>-Extract</code> parameter is added to the command launching Get-ComputerInfo, the data contained by the System Information (<code>msinfo32.exe</code>) program is exported to <code>ms_info.txt</code> and <code>ms_info.nfo</code> files, and on machines running PowerShell version 5.1 or later the data is also converted to a XML-file. Please note that this step will have a drastical toll on the completion time of this script, because each of the three steps may run for minutes.</p>
+                        <p>with aliases <code>-ExtractMsInfo32ToAFile</code>, <code>-ExtractMsInfo32</code>, <code>-MsInfo32ContentsToFile</code>, <code>-MsInfo32Report</code>, <code>-Expand</code> and <code>-Export</code>. If the <code>-Extract</code> parameter is added to the command launching Get-ComputerInfo, the data contained by the System Information (<code>msinfo32.exe</code>) program is exported to <code>ms_info.txt</code> and <code>ms_info.nfo</code> files, and on machines running PowerShell version 5.1 or later the data is also converted to a XML-file. Please note that this step will have a drastical toll on the completion time of this script, because each of the three steps may run for minutes.</p>
                     </li>
                 </p>
                 <p>
@@ -142,7 +142,7 @@
                 <p>
                     <li>
                         <h5>Parameter <code>-GatherNetworkInfo</code></h5>
-                        <p>with an alias <code>-Vbs</code>. If the <code>-GatherNetworkInfo</code> parameter is added to the command launching Get-ComputerInfo, a native <code>GatherNetworkInfo.vbs</code> script (which outputs to <code>$env:temp\Config</code> folder and doesn't follow the <code>-Output</code> parameter) is also eventually executed when Get-ComputerInfo (this script) is run. The vbs script resides in the <code>%WINDOWS%\system32</code> directory and amasses an extensive amount of computer related data to the <code>%TEMP%\Config</code> directory when run. On most Windows machines the <code>GatherNetworkInfo.vbs</code> script has by default a passive scheduled task in the Task Scheduler (i.e. Control Panel → Administrative Tools → Task Scheduler), which for instance can be seen by opening inside the Task Scheduler a Task Scheduler Library → Microsoft → Windows → NetTrace → GatherNetworkInfo tab. The <code>GatherNetworkInfo.vbs</code> script will probably run for a few minutes. Please note that it's mandatory to run the GatherNetworkInfo.vbs in an elevated instance (an elevated <code>cmd</code>-prompt or an elevated PowerShell window) for best results.</p>
+                        <p>with an alias <code>-Vbs</code>. If the <code>-GatherNetworkInfo</code> parameter is added to the command launching Get-ComputerInfo, a native <code>GatherNetworkInfo.vbs</code> script (which outputs to <code>$env:temp\Config</code> folder and doesn't follow the <code>-Output</code> parameter) is also eventually executed when Get-ComputerInfo (this script) is run. The vbs script resides in the <code>%WINDOWS%\system32</code> directory and amasses an extensive amount of computer related data to the <code>%TEMP%\Config</code> directory when run. On most Windows machines the <code>GatherNetworkInfo.vbs</code> script has by default a passive scheduled task in the Task Scheduler (i.e. Control Panel → Administrative Tools → Task Scheduler), which for instance can be seen by opening inside the Task Scheduler a Task Scheduler Library → Microsoft → Windows → NetTrace → GatherNetworkInfo tab. The <code>GatherNetworkInfo.vbs</code> script will probably run for a few minutes. Please note that for best results it's mandatory to run the GatherNetworkInfo.vbs in an elevated instance (an elevated <code>cmd</code>-prompt or an elevated PowerShell window).</p>
                     </li>
                 </p>
                 <p>
@@ -227,7 +227,7 @@
                             <tr>
                                 <td style="padding:6px"><code>$env:temp\ms_info.xml</code></td>
                                 <td style="padding:6px"><code>-Extract</code></td>
-                                <td style="padding:6px">XML-file</td>
+                                <td style="padding:6px">XML-file<sup>1</sup></td>
                             </tr>
                             <tr>
                                 <td style="padding:6px"><code>$env:temp\computer_info.txt</code></td>
@@ -246,6 +246,7 @@
                             </tr>
                         </table>
                     </p>
+                    <p><sup>1</sup> On machines running PowerShell version 5.1 or later</p>
                 </ol>
             </ul>
         </td>
