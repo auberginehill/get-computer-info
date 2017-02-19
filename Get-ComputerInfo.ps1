@@ -17,7 +17,7 @@ Param (
     [Alias("ListOfComputersInATxtFile","List")]
     [string]$File,
     [switch]$SystemInfo,
-    [Alias("ExtractMsInfo32ToAFile","ExtractMsInfo32","MsInfo32ContentsToFile","MsInfo32Report","Expand")]
+    [Alias("ExtractMsInfo32ToAFile","ExtractMsInfo32","MsInfo32ContentsToFile","MsInfo32Report","Expand","Export")]
     [switch]$Extract,
     [Alias("OpenMsInfo32PopUpWindow","Window")]
     [switch]$MsInfo32,
@@ -1226,7 +1226,7 @@ End {
 #>
 # Source: https://technet.microsoft.com/en-us/library/ee692804.aspx
 # Source: http://stackoverflow.com/questions/27175137/powershellv2-remove-last-x-characters-from-a-string#32608908
-If ((($real_output_path.Path).EndsWith("\")) -eq $true) { $real_output_path = $real_output_path -replace ".{1}$"}
+If ((($real_output_path.Path).EndsWith("\")) -eq $true) { $real_output_path = $real_output_path -replace ".{1}$" }
 
 
     # (1) SystemInfo.exe
@@ -1244,7 +1244,7 @@ If ((($real_output_path.Path).EndsWith("\")) -eq $true) { $real_output_path = $r
 
                             # Update the progress bar
                             $activity = "Processing Additional Options $task_number/$activities"
-                            $task = "systeminfo.exe /fo CSV | ConvertFrom-Csv | Out-File '$system_info_txt' -Encoding UTF8"
+                            $task = "systeminfo.exe /fo LIST | Out-File '$system_info_txt' -Encoding UTF8"
                             Write-Progress -Id $id -Activity $activity -Status $status -CurrentOperation $task -PercentComplete (($task_number / $total_steps) * 100)
 
                 Try {
@@ -1300,10 +1300,6 @@ If ((($real_output_path.Path).EndsWith("\")) -eq $true) { $real_output_path = $r
                             Write-Progress -Id $id -Activity $activity -Status $status -CurrentOperation $script -PercentComplete (($task_number / $total_steps) * 100)
                             $empty_line | Out-String
                             Write-Verbose "Please hold on, the ms_info.txt file creation probably runs well over a minute..." -verbose
-
-
-
-
             Try {
                 # .txt file
                 If ($PSVersionTable.PSVersion -ge 5.1) {
@@ -1582,6 +1578,7 @@ If ((($real_output_path.Path).EndsWith("\")) -eq $true) { $real_output_path = $r
                     $gin_selection = Get-Content $computer_info_original | Where { $_ -match ': \S' }
                     $gin_sorted = $gin_selection | sort
                     $gin_sorted | Out-File "$computer_info_txt" -Encoding UTF8
+                    $empty_line | Out-String                    
                     Write-Output $gin_sorted
                     Remove-Job -Command "Get-ComputerInfo" -ErrorAction SilentlyContinue
                     $timer.Stop()
@@ -1683,9 +1680,9 @@ which points to the current temporary file location, may be changed with the
 -Output parameter.
 
 With five additional parameters (switches) the amount of gathered data may be
-enlarged: -SystemInfo parameter will launch the systeminfo.exe /fo CSV Dos command,
+enlarged: -SystemInfo parameter will launch the systeminfo.exe /fo LIST Dos command,
 -MsInfo32 parameter opens the System Information (msinfo32) window, -Extract
-parameter will output the System Information (msinfo32.exe) data to a TXT- and
+parameter will export the System Information (msinfo32.exe) data to a TXT- and
 a NFO-file (and on machines running PowerShell version 5.1 or later convert the 
 data to a XML-file). The -GatherNetworkInfo parameter will launch the native
 GatherNetworkInfo.vbs script (which outputs to $env:temp\Config folder and doesn't
@@ -1722,13 +1719,13 @@ double).
 
 .PARAMETER SystemInfo
 If the -SystemInfo parameter is added to the command launching Get-ComputerInfo,
-a systeminfo.exe /fo CSV Dos command is eventually launched, which outputs a
+a systeminfo.exe /fo LIST Dos command is eventually launched, which outputs a
 system_info.txt text file.
 
 .PARAMETER Extract
 with aliases -ExtractMsInfo32ToAFile, -ExtractMsInfo32, -MsInfo32ContentsToFile,
--MsInfo32Report, and -Expand. If the -Extract parameter is added to the command
-launching Get-ComputerInfo, the data contained by the System Information
+-MsInfo32Report, -Expand and -Export. If the -Extract parameter is added to the 
+command launching Get-ComputerInfo, the data contained by the System Information
 (msinfo32.exe) program is exported to ms_info.txt and ms_info.nfo files, and 
 on machines running PowerShell version 5.1 or later the data is also converted 
 to a XML-file. Please note that this step will have a drastical toll on the 
