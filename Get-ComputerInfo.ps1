@@ -437,6 +437,10 @@ Process {
                 } # switch CurrentScanMode
 
 
+                # Source: https://www.autoitscript.com/autoit3/docs/appendix/OSLangCodes.htm
+                $os_Language = @{ 4 = "Chinese - Simplified"; 1025 = "Arabic - Saudi Arabia"; 1026 = "Bulgarian - Bulgaria"; 1027 = "Catalan - Spain"; 1028 = "Chinese (Traditional) - Taiwan"; 1029 = "Czech - Czech Republic"; 1030 = "Danish - Denmark"; 1031 = "German - Germany"; 1032 = "Greek - Greece"; 1033 = "English - United States"; 1034 = "Spanish - Spain"; 1035 = "Finnish - Finland"; 1036 = "French - France"; 1037 = "Hebrew - Israel"; 1038 = "Hungarian - Hungary"; 1039 = "Icelandic - Iceland"; 1040 = "Italian - Italy"; 1041 = "Japanese - Japan"; 1042 = "Korean - Korea"; 1043 = "Dutch - Netherlands"; 1044 = "Norwegian (Bokmål) - Norway"; 1045 = "Polish - Poland"; 1046 = "Portuguese - Brazil"; 1047 = "Romansh - Switzerland"; 1048 = "Romanian - Romania"; 1049 = "Russian - Russia"; 1050 = "Croatian - Croatia"; 1051 = "Slovak - Slovakia"; 1052 = "Albanian - Albania"; 1053 = "Swedish - Sweden"; 1054 = "Thai - Thailand"; 1055 = "Turkish - Turkey"; 1056 = "Urdu - Pakistan"; 1057 = "Indonesian - Indonesia"; 1058 = "Ukrainian - Ukraine"; 1059 = "Belarusian - Belarus"; 1060 = "Slovenian - Slovenia"; 1061 = "Estonian - Estonia"; 1062 = "Latvian - Latvia"; 1063 = "Lithuanian - Lithuanian"; 1064 = "Tajik (Cyrillic) - Tajikistan"; 1065 = "Persian - Iran"; 1066 = "Vietnamese - Vietnam"; 1067 = "Armenian - Armenia"; 1068 = "Azeri (Latin) - Azerbaijan"; 1069 = "Basque - Basque"; 1070 = "Upper Sorbian - Germany"; 1071 = "Macedonian - Macedonia"; 1074 = "Setswana / Tswana - South Africa"; 1076 = "isiXhosa - South Africa"; 1077 = "isiZulu - South Africa"; 1078 = "Afrikaans - South Africa"; 1079 = "Georgian - Georgia"; 1080 = "Faroese - Faroe Islands"; 1081 = "Hindi - India"; 1082 = "Maltese - Malta"; 1083 = "Sami (Northern) - Norway"; 1086 = "Malay - Malaysia"; 1087 = "Kazakh - Kazakhstan"; 1088 = "Kyrgyz - Kyrgyzstan"; 1089 = "Swahili - Kenya"; 1090 = "Turkmen - Turkmenistan"; 1091 = "Uzbek (Latin) - Uzbekistan"; 1092 = "Tatar - Russia"; 1093 = "Bangla - Bangladesh"; 1094 = "Punjabi - India"; 1095 = "Gujarati - India"; 1096 = "Oriya - India"; 1097 = "Tamil - India"; 1098 = "Telugu - India"; 1099 = "Kannada - India"; 1100 = "Malayalam - India"; 1101 = "Assamese - India"; 1102 = "Marathi - India"; 1103 = "Sanskrit - India"; 1104 = "Mongolian (Cyrillic) - Mongolia"; 1105 = "Tibetan - China"; 1106 = "Welsh - United Kingdom"; 1107 = "Khmer - Cambodia"; 1108 = "Lao - Lao PDR"; 1110 = "Galician - Spain"; 1111 = "Konkani - India"; 1113 = "(reserved) - (reserved)"; 1114 = "Syriac - Syria"; 1115 = "Sinhala - Sri Lanka"; 1116 = "Cherokee - Cherokee"; 1117 = "Inuktitut (Canadian_Syllabics) - Canada"; 1118 = "Amharic - Ethiopia"; 1121 = "Nepali - Nepal"; 1122 = "Frisian - Netherlands"; 1123 = "Pashto - Afghanistan"; 1124 = "Filipino - Philippines"; 1125 = "Divehi - Maldives"; 1128 = "Hausa - Nigeria"; 1130 = "Yoruba - Nigeria"; 1131 = "Quechua - Bolivia"; 1132 = "Sesotho sa Leboa - South Africa"; 1133 = "Bashkir - Russia"; 1134 = "Luxembourgish - Luxembourg"; 1135 = "Greenlandic - Greenland"; 1136 = "Igbo - Nigeria"; 1139 = "Tigrinya - Ethiopia"; 1141 = "Hawiian - United States"; 1144 = "Yi - China"; 1146 = "Mapudungun - Chile"; 1148 = "Mohawk - Canada"; 1150 = "Breton - France"; 1152 = "Uyghur - China"; 1153 = "Maori - New Zealand"; 1154 = "Occitan - France"; 1155 = "Corsican - France"; 1156 = "Alsatian - France"; 1157 = "Sakha - Russia"; 1158 = "K'iche - Guatemala"; 1159 = "Kinyarwanda - Rwanda"; 1160 = "Wolof - Senegal"; 1164 = "Dari - Afghanistan"; 1169 = "Scottish Gaelic - United Kingdom"; 1170 = "Central Kurdish - Iraq"; 2049 = "Arabic - Iraq"; 2051 = "Valencian - Valencia"; 2052 = "Chinese (Simplified) - China"; 2055 = "German - Switzerland"; 2057 = "English - United Kingdom"; 2058 = "Spanish - Mexico"; 2060 = "French - Belgium"; 2064 = "Italian - Switzerland"; 2067 = "Dutch - Belgium"; 2068 = "Norwegian (Nynorsk) - Norway"; 2070 = "Portuguese - Portugal"; 2074 = "Serbian (Latin) - Serbia and Montenegro"; 2077 = "Swedish - Finland"; 2080 = "Urdu - (reserved)"; 2092 = "Azeri (Cyrillic) - Azerbaijan"; 2094 = "Lower Sorbian - Germany"; 2098 = "Setswana / Tswana - Botswana"; 2107 = "Sami (Northern) - Sweden"; 2108 = "Irish - Ireland"; 2110 = "Malay - Brunei Darassalam"; 2115 = "Uzbek (Cyrillic) - Uzbekistan"; 2117 = "Bangla - Bangladesh"; 2118 = "Punjabi - Pakistan"; 2121 = "Tamil - Sri Lanka"; 2128 = "Mongolian (Mong) - Mongolia"; 2137 = "Sindhi - Pakistan"; 2141 = "Inuktitut (Latin) - Canada"; 2143 = "Tamazight (Latin) - Algeria"; 2151 = "Pular - Senegal"; 2155 = "Quechua - Ecuador"; 2163 = "Tigrinya - Eritrea"; 3073 = "Arabic - Egypt"; 3076 = "Chinese - Hong Kong SAR"; 3079 = "German - Austria"; 3081 = "English - Australia"; 3082 = "Spanish - Spain"; 3084 = "French - Canada"; 3098 = "Serbian (Cyrillic) - Serbia and Montenegro"; 3131 = "Sami (Northern) - Finland"; 3179 = "Quechua - Peru"; 4097 = "Arabic - Libya"; 4100 = "Chinese - Singapore"; 4103 = "German - Luxembourg"; 4105 = "English - Canada"; 4106 = "Spanish - Guatemala"; 4108 = "French - Switzerland"; 4122 = "Croatian (Latin) - Bosnia and Herzegovina"; 4155 = "Sami (Lule) - Norway"; 4191 = "Central Atlas Tamazight (Tifinagh) - Morocco"; 5121 = "Arabic - Algeria"; 5124 = "Chinese - Macao SAR"; 5127 = "German - Liechtenstein"; 5129 = "English - New Zealand"; 5130 = "Spanish - Costa Rica"; 5132 = "French - Luxembourg"; 5146 = "Bosnian (Latin) - Bosnia and Herzegovina"; 5179 = "Sami (Lule) - Sweden"; 6145 = "Arabic - Morocco"; 6153 = "English - Ireland"; 6154 = "Spanish - Panama"; 6156 = "French - Monaco"; 6170 = "Serbian (Latin) - Bosnia and Herzegovina"; 6203 = "Sami (Southern) - Norway"; 7169 = "Arabic - Tunisia"; 7177 = "English - South Africa"; 7178 = "Spanish - Dominican Republic"; 7194 = "Serbian (Cyrillic) - Bosnia and Herzegovina"; 7227 = "Sami (Southern) - Sweden"; 8193 = "Arabic - Oman"; 8201 = "English - Jamaica"; 8202 = "Spanish - Venezuela"; 8218 = "Bosnian (Cyrillic) - Bosnia and Herzegovina"; 8251 = "Sami (Skolt) - Finland"; 9217 = "Arabic - Yemen"; 9225 = "English - Caribbean"; 9226 = "Spanish - Colombia"; 9242 = "Serbian (Latin) - Serbia"; 9275 = "Sami (Inari) - Finland"; 10241 = "Arabic - Syria"; 10249 = "English - Belize"; 10250 = "Spanish - Peru"; 10266 = "Serbian (Cyrillic) - Serbia"; 11265 = "Arabic - Jordan"; 11273 = "English - Trinidad and Tobago"; 11274 = "Spanish - Argentina"; 11290 = "Serbian (Latin) - Montenegro"; 12289 = "Arabic - Lebanon"; 12297 = "English - Zimbabwe"; 12298 = "Spanish - Ecuador"; 12314 = "Serbian (Cyrillic) - Montenegro"; 13313 = "Arabic - Kuwait"; 13321 = "English - Philippines"; 13322 = "Spanish - Chile"; 14337 = "Arabic - U.A.E."; 14346 = "Spanish - Uruguay"; 15361 = "Arabic - Bahrain"; 15370 = "Spanish - Paraguay"; 16385 = "Arabic - Qatar"; 16393 = "English - India"; 16394 = "Spanish - Bolivia"; 17417 = "English - Malaysia"; 17418 = "Spanish - El Salvador"; 18441 = "English - Singapore"; 18442 = "Spanish - Honduras"; 19466 = "Spanish - Nicaragua"; 20490 = "Spanish - Puerto Rico"; 21514 = "Spanish - United States"; 31748 = "Chinese - Traditional" }
+
+
                 # CPU
                 $CPUArchitecture_data = $processor.Name
                 If ($CPUArchitecture_data.Contains("(TM)")) {
@@ -516,6 +520,7 @@ Process {
                             'Cores'                         = $processor.NumberOfCores
                             'Physical Processors'           = $compsys.NumberOfProcessors
                             'Country Code'                  = $os.CountryCode
+                            'OS Language'                   = $os_Language[[int]$os.OSLanguage]
                             'Video Card Driver Date'        = (@(ForEach ($videocard in $video) { ($videocard.ConvertToDateTime($videocard.DriverDate)).ToShortDateString() }) | Out-String).Trim()
                             'Video Card Driver Date_br'     = (@(ForEach ($videocard in $video) { ($videocard.ConvertToDateTime($videocard.DriverDate)).ToShortDateString() }) -join '<br />')
                             'BIOS Release Date'             = (Get-Date -year ($system.BIOSReleaseDate.split("/")[-1]) -month ($system.BIOSReleaseDate.split("/")[0]) -day ($system.BIOSReleaseDate.split("/")[1])).ToShortDateString()
@@ -570,7 +575,7 @@ Process {
 
 
                     # Display OS Info in console
-                    $obj_osinfo_selection = $osinfo | Select-Object 'Computer','Manufacturer','Computer Model','System Type','Domain Role','Product Type','Chassis','PC Type','Is a Laptop?','Model Version','CPU','Video Card','Resolution','Operating System','Architecture','Windows Edition ID','Windows Installation Type','Windows Platform','Type','SP Version','Windows BuildLab Extended','Windows BuildLab','Windows Build Branch','Windows Build Number','Windows Release Id','Current Version','Memory','Video Card Memory','Logical Processors','Cores','Physical Processors','Country Code','Video Card Driver Date','BIOS Release Date','OS Install Date','Last BootUp','UpTime','Date','Daylight Bias','Time Offset (Current)','Time Offset (Normal)','Time (Current)','Time (Normal)','Daylight In Effect','Time Zone','Connectivity','Mobile Broadband','OS Version','PowerShell Version','Video Card Version','BIOS Version','Mother Board Version','Serial Number (BIOS)','Serial Number (Mother Board)','Serial Number (OS)','UUID'
+                    $obj_osinfo_selection = $osinfo | Select-Object 'Computer','Manufacturer','Computer Model','System Type','Domain Role','Product Type','Chassis','PC Type','Is a Laptop?','Model Version','CPU','Video Card','Resolution','Operating System','Architecture','Windows Edition ID','Windows Installation Type','Windows Platform','Type','SP Version','Windows BuildLab Extended','Windows BuildLab','Windows Build Branch','Windows Build Number','Windows Release Id','Current Version','Memory','Video Card Memory','Logical Processors','Cores','Physical Processors','Country Code','OS Language','Video Card Driver Date','BIOS Release Date','OS Install Date','Last BootUp','UpTime','Date','Daylight Bias','Time Offset (Current)','Time Offset (Normal)','Time (Current)','Time (Normal)','Daylight In Effect','Time Zone','Connectivity','Mobile Broadband','OS Version','PowerShell Version','Video Card Version','BIOS Version','Mother Board Version','Serial Number (BIOS)','Serial Number (Mother Board)','Serial Number (OS)','UUID'
                     $obj_osinfo_selection.PSObject.TypeNames.Insert(0,"OSInfo")
                     Write-Output $obj_osinfo_selection
                     $empty_line | Out-String
@@ -856,6 +861,10 @@ Process {
         <tr>
             <th>Country Code:</th>
             <td>" + ($osinfo | Select-Object -ExpandProperty 'Country Code') + "</td>
+        </tr>
+        <tr>
+            <th>OS Language:</th>
+            <td>" + ($osinfo | Select-Object -ExpandProperty 'OS Language') + "</td>
         </tr>
         <tr>
             <th>Video Card Driver Date:</th>
@@ -1250,7 +1259,7 @@ If ((($real_output_path.Path).EndsWith("\")) -eq $true) { $real_output_path = $r
                 Try {
                     $system_info = systeminfo.exe /fo LIST | Out-File "$system_info_txt" -Encoding UTF8
                 } Catch { Write-Debug $_.Exception }
-              
+
         } Else {
             $continue = $true
         } # Else
@@ -1306,7 +1315,7 @@ If ((($real_output_path.Path).EndsWith("\")) -eq $true) { $real_output_path = $r
                     & msinfo32.exe /categories +systemsummary /report "$ms_info_txt"
                 } Else {
                     & msinfo32.exe /categories +systemsummary /report "$ms_info_txt" | Out-Null
-                } # Else (If $PSVersionTable.PSVersion)                   
+                } # Else (If $PSVersionTable.PSVersion)
             } Catch { Write-Debug $_.Exception }
 
                             do {    $processes = Get-Process
@@ -1356,7 +1365,7 @@ If ((($real_output_path.Path).EndsWith("\")) -eq $true) { $real_output_path = $r
                     & msinfo32.exe /categories +systemsummary /nfo "$ms_info_nfo"
                 } Else {
                     & msinfo32.exe /categories +systemsummary /nfo "$ms_info_nfo" | Out-Null
-                } # Else (If $PSVersionTable.PSVersion)      
+                } # Else (If $PSVersionTable.PSVersion)
             } Catch { Write-Debug $_.Exception }
 
                             do {    $processes = Get-Process
@@ -1370,7 +1379,7 @@ If ((($real_output_path.Path).EndsWith("\")) -eq $true) { $real_output_path = $r
 
                     # .nfo to .xml conversion
                     If ($PSVersionTable.PSVersion -ge 5.1) {
-                                    Try {                                        
+                                    Try {
                                         $ms_info_xml = [System.IO.Path]::ChangeExtension($ms_info_nfo,"xml")
                                         $source_alfa = Get-Content $ms_info_nfo
                                         $source_alfa.Replace("<>", "<type>") | Out-File "$ms_info_nfo" -Encoding UTF8
@@ -1383,7 +1392,7 @@ If ((($real_output_path.Path).EndsWith("\")) -eq $true) { $real_output_path = $r
                                     } Catch { Write-Debug $_.Exception }
                     } Else {
                         $continue = $true
-                    } # Else (If $PSVersionTable.PSVersion)                            
+                    } # Else (If $PSVersionTable.PSVersion)
             $timer.Stop()
             $timer.Reset()
         } Else {
@@ -1480,10 +1489,10 @@ If ((($real_output_path.Path).EndsWith("\")) -eq $true) { $real_output_path = $r
                             $timer.Reset()
                             #>
                 } Else {
-                    Cscript $system32\gatherNetworkInfo.vbs //Nologo                                       
+                    Cscript $system32\gatherNetworkInfo.vbs //Nologo
                 } # Else
                             If ((Test-Path $folder) -eq $true){
-                                $empty_line | Out-String 
+                                $empty_line | Out-String
                                 Write-Verbose "The output of GatherNetworkInfo.vbs script may be found inside the '$folder' directory." -verbose
                             } Else {
                                 "The content creation failed."
@@ -1578,7 +1587,7 @@ If ((($real_output_path.Path).EndsWith("\")) -eq $true) { $real_output_path = $r
                     $gin_selection = Get-Content $computer_info_original | Where { $_ -match ': \S' }
                     $gin_sorted = $gin_selection | sort
                     $gin_sorted | Out-File "$computer_info_txt" -Encoding UTF8
-                    $empty_line | Out-String                    
+                    $empty_line | Out-String
                     Write-Output $gin_sorted
                     Remove-Job -Command "Get-ComputerInfo" -ErrorAction SilentlyContinue
                     $timer.Stop()
@@ -1683,7 +1692,7 @@ With five additional parameters (switches) the amount of gathered data may be
 enlarged: -SystemInfo parameter will launch the systeminfo.exe /fo LIST Dos command,
 -MsInfo32 parameter opens the System Information (msinfo32) window, -Extract
 parameter will export the System Information (msinfo32.exe) data to a TXT- and
-a NFO-file (and on machines running PowerShell version 5.1 or later convert the 
+a NFO-file (and on machines running PowerShell version 5.1 or later convert the
 data to a XML-file). The -GatherNetworkInfo parameter will launch the native
 GatherNetworkInfo.vbs script (which outputs to $env:temp\Config folder and doesn't
 follow the -Output parameter) and -Cmdlet parameter will try to launch the native
@@ -1724,11 +1733,11 @@ system_info.txt text file.
 
 .PARAMETER Extract
 with aliases -ExtractMsInfo32ToAFile, -ExtractMsInfo32, -MsInfo32ContentsToFile,
--MsInfo32Report, -Expand and -Export. If the -Extract parameter is added to the 
+-MsInfo32Report, -Expand and -Export. If the -Extract parameter is added to the
 command launching Get-ComputerInfo, the data contained by the System Information
-(msinfo32.exe) program is exported to ms_info.txt and ms_info.nfo files, and 
-on machines running PowerShell version 5.1 or later the data is also converted 
-to a XML-file. Please note that this step will have a drastical toll on the 
+(msinfo32.exe) program is exported to ms_info.txt and ms_info.nfo files, and
+on machines running PowerShell version 5.1 or later the data is also converted
+to a XML-file. Please note that this step will have a drastical toll on the
 completion time of this script, because each of the three steps may run for minutes.
 
 .PARAMETER MsInfo32
@@ -1748,7 +1757,7 @@ Task Scheduler (i.e. Control Panel > Administrative Tools > Task Scheduler), whi
 for instance can be seen by opening inside the Task Scheduler a
 Task Scheduler Library > Microsoft > Windows > NetTrace > GatherNetworkInfo tab.
 The GatherNetworkInfo.vbs script will probably run for a few minutes. Please note
-that it's mandatory to run the GatherNetworkInfo.vbs in an elevated instance 
+that it's mandatory to run the GatherNetworkInfo.vbs in an elevated instance
 (an elevated cmd-prompt or an elevated PowerShell window) for best results.
 
 .PARAMETER Cmdlet
@@ -1827,11 +1836,11 @@ Display the help file.
 ./Get-ComputerInfo -Computer dc01, dc02 -Output "E:\chiore" -SystemInfo -Extract -MsInfo32 -Vbs -Cmdlet
 Run the script get all the available computer related information from the computers
 dc01 and dc02. Save most of the results in the "E:\chiore" directory (the results of
-the GatherNetworkInfo.vbs are saved to $env:temp\Config folder, if the command 
-launching Get-ComputerInfo was run in an elevated PowerShell window). This command 
-will work, because -Vbs is an alias of -GatherNetworkInfo. Since the path name 
+the GatherNetworkInfo.vbs are saved to $env:temp\Config folder, if the command
+launching Get-ComputerInfo was run in an elevated PowerShell window). This command
+will work, because -Vbs is an alias of -GatherNetworkInfo. Since the path name
 doesn't contain any space characters, it doesn't need to be enveloped with quotation
-marks, and furthermore, the word -Computer may be left out from this command, too, 
+marks, and furthermore, the word -Computer may be left out from this command, too,
 because the values dc01 and dc02 are accepted as computer names due to their position
 (first).
 
